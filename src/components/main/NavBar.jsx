@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import { Home, Search } from 'lucide-react'
 
 export default function NavBar() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchParams] = useSearchParams()
   const initialTitle = searchParams.get('title') || ''
   const [query, setQuery] = useState(initialTitle)
@@ -21,11 +22,10 @@ export default function NavBar() {
       navigate(`/search?title=${encodeURIComponent(trimmed)}`)
     }
   }
-
   return (
-    <nav className="w-full bg-gray-300 dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+    <nav className={`w-full bg-gray-300 dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-16 z-40`}>
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-12">
           <div className="flex items-center gap-4">
             <Link to="/" aria-label="Home" className="inline-flex items-center text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white cursor-pointer">
               <Home size={20} className="text-gray-700 dark:text-gray-200 cursor-pointer" />

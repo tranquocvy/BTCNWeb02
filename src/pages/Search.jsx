@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import MovieCard from '../components/movie/MovieCard'
+import LoadingSkeleton from '../components/movie/LoadingSkeleton'
 import { searchMovies } from '../services/api/endpoints/movie'
 import Pagination from '../components/ui/Pagination'
 
@@ -80,7 +81,11 @@ export default function Search() {
       <div className="max-w-[1200px] mx-auto px-4">
 
         {loading && (
-          <div className="text-center py-12 text-gray-400">Loading...</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {Array.from({ length: DEFAULT_LIMIT }).map((_, i) => (
+              <LoadingSkeleton key={i} variant="compact" />
+            ))}
+          </div>
         )}
 
         {error && (
