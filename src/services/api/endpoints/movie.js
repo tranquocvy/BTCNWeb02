@@ -110,4 +110,13 @@ export async function searchPeople(query, page = 1, limit = 12) {
   return { data: items, total, current_page, total_pages }
 }
 
-export default { fetchTopRevenueMovies, fetchPopularMovies, fetchTopRatedMovies, searchMovies }
+/**
+ * Get movie details by id (endpoint: /movies/{id})
+ */
+export async function getMovie(id) {
+  if (!id) return null
+  const res = await request(`/movies/${id}`, { method: 'GET' })
+  return res && res.data ? res.data : res
+}
+
+export default { fetchTopRevenueMovies, fetchPopularMovies, fetchTopRatedMovies, searchMovies, getMovie }
