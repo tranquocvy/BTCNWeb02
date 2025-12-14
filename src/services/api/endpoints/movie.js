@@ -13,17 +13,35 @@ export async function fetchTopRevenueMovies() {
   return []
 }
 
+
 /**
  * Fetch popular movies (endpoint: /movies/most-popular).
- * Returns approximately 30 movies from page 1.
+ * call multiple pages until it collects up to ~30 items or no more data.
  */
 export async function fetchPopularMovies() {
-  const qs = new URLSearchParams({ page: '1', limit: '30' })
-  const data = await request(`/movies/most-popular?${qs.toString()}`, { method: 'GET' })
+  const target = 30
+  const perRequest = 12
+  let page = 1
+  const results = []
 
-  if (Array.isArray(data)) return data
-  if (data && Array.isArray(data.data)) return data.data
-  return []
+  while (results.length < target) {
+    const qs = new URLSearchParams({ page: String(page), limit: String(perRequest) })
+    const data = await request(`/movies/most-popular?${qs.toString()}`, { method: 'GET' })
+
+    const items = Array.isArray(data) ? data : data && Array.isArray(data.data) ? data.data : []
+    if (!items || items.length === 0) break
+
+    results.push(...items)
+
+    // If the server returned fewer than requested, probably last page
+    if (items.length < perRequest) break
+
+    page += 1
+    // safety cap to avoid infinite loops
+    if (page > 10) break
+  }
+
+  return results.slice(0, target)
 }
 
 export default { fetchTopRevenueMovies, fetchPopularMovies }
