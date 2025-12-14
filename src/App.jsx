@@ -2,10 +2,15 @@ import MainLayout from './layouts/MainLayout'
 import { Routes, Route } from 'react-router-dom'
 import './App.css'
 
+import Search from './pages/Search'
+import MovieDetail from './pages/MovieDetail'
+
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />} />
+      <Route path="/search" element={<MainLayout><Search /></MainLayout>} />
+      <Route path="/movie/:id" element={<MainLayout><MovieDetail /></MainLayout>} />
     </Routes>
   )
 }
