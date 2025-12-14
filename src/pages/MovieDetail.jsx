@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Tag, Clock, Calendar, Globe, Languages, NotebookPen  } from 'lucide-react'
+import { Tag, Clock, Calendar, Globe, Languages, NotebookPen, Trophy } from 'lucide-react'
 import LoadingSkeleton from '../components/movie/LoadingSkeleton'
 import { getMovie, getMovieReviews } from '../services/api/endpoints/movie'
 import Pagination from '../components/ui/Pagination'
@@ -104,7 +104,7 @@ export default function MovieDetail() {
         </div>
 
         {/* Info */}
-        <div className="md:w-3/5 space-y-6">
+        <div className="md:w-3/5 space-y-5">
           {/* Title */}
           {movie.full_title && (
             <h1 className="text-5xl font-extrabold text-white uppercase tracking-wide">{movie.full_title}</h1>
@@ -160,19 +160,15 @@ export default function MovieDetail() {
                 </div>
               </div>
             )}
-
-            {movie.rating_age && (
-              <div className="flex items-center gap-3">
-                <span className="bg-yellow-400 text-black px-3 py-1 rounded font-bold text-base">{movie.rating_age}</span>
-              </div>
-            )}
           </div>
 
           {/* Awards */}
           {movie.awards && (
             <div>
-              <h3 className="text-left text-2xl font-bold text-white mb-3 uppercase">GIẢI THƯỞNG</h3>
-              <p className="text-left text-base text-gray-300">{movie.awards}</p>
+              <div className="flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-yellow-400" />
+                <p className="text-left text-base text-yellow-400 font-semibold">{movie.awards}</p>
+              </div>
             </div>
           )}
 
