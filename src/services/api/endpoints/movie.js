@@ -72,4 +72,20 @@ export async function fetchTopRatedMovies() {
   return results.slice(0, target)
 }
 
-export default { fetchTopRevenueMovies, fetchPopularMovies, fetchTopRatedMovies }
+/**
+ * Search movies by title (endpoint: /movies/search).
+ */
+export async function searchMovies(query, page = 1, limit = 12) {
+  const qs = new URLSearchParams({ title: String(query || ''), page: String(page), limit: String(limit) })
+  const res = await request(`/movies/search?${qs.toString()}`, {
+    method: 'GET',
+    headers: { title: String(query || '') }
+  })
+
+  const items = Array.isArray(res) ? res : res && Array.isArray(res.data) ? res.data : []
+  const total = res && typeof res.total === 'number' ? res.total : null
+
+  return { data: items, total }
+}
+
+export default { fetchTopRevenueMovies, fetchPopularMovies, fetchTopRatedMovies, searchMovies }
