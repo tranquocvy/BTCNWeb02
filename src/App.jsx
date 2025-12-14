@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import HeroSlide from './components/movie/Top5Movies'
 import MovieList from './components/movie/MovieList'
-import { fetchTopRevenueMovies, fetchPopularMovies } from './services/api/endpoints/movie'
+import { fetchTopRevenueMovies, fetchPopularMovies, fetchTopRatedMovies } from './services/api/endpoints/movie'
 import './App.css'
 
 function App() {
   const [top5Movies, setTop5Movies] = useState([])
   const [popularMovies, setPopularMovies] = useState([])
+  const [topRatedMovies, setTopRatedMovies] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -14,12 +15,14 @@ function App() {
     async function loadMovies() {
       try {
         setLoading(true)
-        const [top5Data, popularData] = await Promise.all([
+        const [top5Data, popularData, topRatedData] = await Promise.all([
           fetchTopRevenueMovies(),
-          fetchPopularMovies()
+          fetchPopularMovies(),
+          fetchTopRatedMovies()
         ])
         setTop5Movies(top5Data)
         setPopularMovies(popularData)
+        setTopRatedMovies(topRatedData)
       } catch (err) {
         console.error('Error loading movies:', err)
         setError(err.message)
@@ -62,6 +65,14 @@ function App() {
                 Popular Movies
               </h2>
               <MovieList movies={popularMovies} />
+            </section>
+
+            {/* Top Rated Movies Section */}
+            <section>
+              <h2 className="mb-8 text-center text-4xl font-bold text-white">
+                Top Rated Movies
+              </h2>
+              <MovieList movies={topRatedMovies} />
             </section>
           </>
         )}
