@@ -5,7 +5,7 @@ import { request } from '../client'
  * Returns an array of 5 movies (top by revenue).
  */
 export async function fetchTopRevenueMovies() {
-  const qs = new URLSearchParams({ page: '1', page_size: '5' })
+  const qs = new URLSearchParams({ page: '1', limit: '5' })
   const data = await request(`/movies/most-popular?${qs.toString()}`, { method: 'GET' })
 
   if (Array.isArray(data)) return data.slice(0, 5)

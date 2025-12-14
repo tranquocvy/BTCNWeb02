@@ -10,9 +10,12 @@ async function request(path, options = {}) {
     ...options,
   }
 
-  // attach Authorization header when token exists
   if (TOKEN) {
-    init.headers = { ...init.headers, Authorization: `Bearer ${TOKEN}` }
+    init.headers = {
+      ...init.headers,
+      Authorization: `Bearer ${TOKEN}`,
+      'x-app-token': TOKEN,
+    }
   }
 
   if (init.body && typeof init.body === 'object') {
@@ -20,10 +23,18 @@ async function request(path, options = {}) {
     init.body = JSON.stringify(init.body)
   }
 
-  const res = await fetch(url, init)
+  let res
+  try {
+    res = await fetch(url, init)
+  } catch (err) {
+    const e = new Error(`Network error when fetching ${url}: ${err && err.message ? err.message : String(err)}`)
+    e.cause = err
+    throw e
+  }
+
   if (!res.ok) {
     const text = await res.text().catch(() => '')
-    const err = new Error(`HTTP ${res.status} ${res.statusText}`)
+    const err = new Error(`HTTP ${res.status} ${res.statusText} when fetching ${url}`)
     err.status = res.status
     err.body = text
     throw err
