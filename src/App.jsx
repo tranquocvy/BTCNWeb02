@@ -4,6 +4,7 @@ import './App.css'
 
 import Search from './pages/Search'
 import MovieDetail from './pages/MovieDetail'
+import PersonDetail from './pages/PersonDetail'
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <Route path="/" element={<MainLayout />} />
       <Route path="/search" element={<MainLayout><Search /></MainLayout>} />
       <Route path="/movie/:id" element={<MainLayout><MovieDetail /></MainLayout>} />
+      <Route path="/person/:id" element={<MainLayout><PersonDetail /></MainLayout>} />
     </Routes>
   )
 }

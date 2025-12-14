@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { Tag, Clock, Calendar, Globe, Languages, NotebookPen  } from 'lucide-react'
 import LoadingSkeleton from '../components/movie/LoadingSkeleton'
 import { getMovie, getMovieReviews } from '../services/api/endpoints/movie'
@@ -150,7 +150,14 @@ export default function MovieDetail() {
             {Array.isArray(movie.directors) && movie.directors.length > 0 && (
               <div className="flex items-center gap-3">
                 <NotebookPen  className="w-5 h-5 text-yellow-400" />
-                <span className="text-lg">{movie.directors.map(d => d.name).join(', ')}</span>
+                <div className="text-lg flex flex-wrap gap-1">
+                  {movie.directors.map((d, i) => (
+                    <span key={d.id || d.name}>
+                      {i > 0 && <span className="text-gray-400">, </span>}
+                      <Link to={`/person/${d.id || d.name}`} className="hover:underline text-lg ">{d.name}</Link>
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -175,10 +182,10 @@ export default function MovieDetail() {
               <h3 className="text-left text-2xl font-bold text-white mb-3 uppercase">DIỄN VIÊN</h3>
               <div className="flex gap-4 overflow-x-auto pb-3 custom-scrollbar">
                 {movie.actors.filter(a => a.image).map((a) => (
-                  <div key={a.id || a.name} className="flex flex-col items-center gap-2 bg-gray-800 p-3 rounded min-w-[120px]">
+                  <Link key={a.id || a.name} to={`/person/${a.id || a.name}`} className="flex flex-col items-start gap-2 bg-gray-800 p-3 rounded min-w-[120px] hover:brightness-110">
                     <img src={a.image} alt={a.name} className="w-20 h-20 rounded-full object-cover" />
-                    <span className="text-sm text-gray-200 text-left w-full">{a.name}</span>
-                  </div>
+                    <span className="text-sm text-gray-200 text-left w-full hover:underline">{a.name}</span>
+                  </Link>
                 ))}
               </div>
             </div>
