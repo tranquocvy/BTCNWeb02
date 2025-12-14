@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Tag, Clock, Calendar, Globe, Languages, NotebookPen  } from 'lucide-react'
 import LoadingSkeleton from '../components/movie/LoadingSkeleton'
-import { getMovie } from '../services/api/endpoints/movie'
+import { getMovie, getMovieReviews } from '../services/api/endpoints/movie'
 
 const scrollbarStyles = `
   .custom-scrollbar::-webkit-scrollbar {
@@ -27,6 +27,10 @@ export default function MovieDetail() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [plotExpanded, setPlotExpanded] = useState(false)
+  const [reviews, setReviews] = useState([])
+  const [reviewsLoading, setReviewsLoading] = useState(false)
+  const [reviewsMeta, setReviewsMeta] = useState({ total: 0, current_page: 1, total_pages: 1, page_size: 10 })
+  const [expandedReviews, setExpandedReviews] = useState(new Set())
 
   useEffect(() => {
     let mounted = true
@@ -42,7 +46,7 @@ export default function MovieDetail() {
         if (!mounted) return
         setError(err.message || String(err))
       } finally {
-        if (!mounted) setLoading(false)
+        if (mounted) setLoading(false)
       }
     }
 
@@ -51,6 +55,29 @@ export default function MovieDetail() {
       mounted = false
     }
   }, [id])
+
+  useEffect(() => {
+    if (!movie || !movie.id) return
+    let mounted = true
+    async function fetchReviews() {
+      setReviewsLoading(true)
+      try {
+        const res = await getMovieReviews(movie.id, 1, 10)
+        if (!mounted) return
+        setReviews(Array.isArray(res.data) ? res.data : [])
+        setReviewsMeta({ total: res.total || 0, current_page: res.current_page || 1, total_pages: res.total_pages || 1, page_size: res.page_size || 10 })
+      } catch (err) {
+        if (!mounted) return
+        console.error(err)
+      } finally {
+        if (mounted) {
+          setReviewsLoading(false)
+        }
+      }
+    }
+    fetchReviews()
+    return () => { mounted = false }
+  }, [movie && movie.id])
 
   if (loading) return <div className="max-w-[1200px] mx-auto px-4 py-8"><LoadingSkeleton variant="large" /></div>
   if (error) return <div className="max-w-[1200px] mx-auto px-4 py-8 text-red-400">Error: {error}</div>
@@ -156,7 +183,7 @@ export default function MovieDetail() {
                 {movie.actors.filter(a => a.image).map((a) => (
                   <div key={a.id || a.name} className="flex flex-col items-center gap-2 bg-gray-800 p-3 rounded min-w-[120px]">
                     <img src={a.image} alt={a.name} className="w-20 h-20 rounded-full object-cover" />
-                    <span className="text-sm text-gray-200 text-center">{a.name}</span>
+                    <span className="text-sm text-gray-200 text-left w-full">{a.name}</span>
                   </div>
                 ))}
               </div>
@@ -171,6 +198,60 @@ export default function MovieDetail() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Reviews */}
+      <div className="w-full mt-8">
+        <h2 className="text-2xl font-bold text-white mb-4">REVIEWS ({reviewsMeta.total})</h2>
+        {reviewsLoading ? (
+          <div className="text-gray-400">Đang tải reviews...</div>
+        ) : reviews.length === 0 ? (
+          <div className="text-gray-400">Chưa có review cho phim này.</div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {reviews.map((r, idx) => {
+              const idKey = r.id || r.username || `rev-${idx}`
+              const expanded = expandedReviews.has(idKey)
+              return (
+                <div
+                  key={idKey}
+                  onClick={() => setExpandedReviews(prev => {
+                    const s = new Set(prev)
+                    if (s.has(idKey)) s.delete(idKey)
+                    else s.add(idKey)
+                    return s
+                  })}
+                  className="w-full border border-white/10 rounded bg-gray-900 p-4 cursor-pointer hover:bg-gray-800 transition"
+                >
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center text-black font-bold">
+                        {r.username ? r.username.charAt(0).toUpperCase() : '?'}
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="text-sm font-semibold text-gray-200">{r.username || 'Người dùng'}</div>
+                          {r.title && <div className="text-sm text-white font-semibold mt-1">{r.title}</div>}
+                        </div>
+                        <div className="text-sm text-gray-400 flex items-center gap-2">
+                          {r.rate ? <span>Rating: {r.rate}</span> : null}
+                          {r.warning_spoilers ? <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded">Spoiler</span> : null}
+                          <span>{r.date ? new Date(r.date).toLocaleDateString() : ''}</span>
+                        </div>
+                      </div>
+                      <div className="mt-2 text-gray-300 text-sm" style={expanded ? {} : { display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        {r.content}
+                      </div>
+                      <div className="mt-2 text-xs text-yellow-400 font-semibold">{expanded ? 'Thu gọn' : 'Xem thêm'}</div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
       </div>
       </div>
     </>
