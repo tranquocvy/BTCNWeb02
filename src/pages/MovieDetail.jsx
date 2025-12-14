@@ -157,28 +157,18 @@ export default function MovieDetail() {
             )}
           </div>
 
-          {/* Plot */}
-          {movie.plot_full && (
+          {/* Awards */}
+          {movie.awards && (
             <div>
-              <h3 className="text-2xl font-bold text-white mb-3 items-left">NỘI DUNG PHIM</h3>
-              <div
-                className={`text-base text-gray-300 leading-relaxed transition-all ${plotExpanded ? '' : 'max-h-36 overflow-hidden'}`}
-                dangerouslySetInnerHTML={{ __html: movie.plot_full }}
-              />
-              <button
-                onClick={() => setPlotExpanded(p => !p)}
-                className="mt-2 text-sm text-yellow-400 font-semibold cursor-pointer hover:underline"
-                aria-expanded={plotExpanded}
-              >
-                {plotExpanded ? 'Thu gọn' : 'Xem thêm'}
-              </button>
+              <h3 className="text-left text-2xl font-bold text-white mb-3 uppercase">GIẢI THƯỞNG</h3>
+              <p className="text-left text-base text-gray-300">{movie.awards}</p>
             </div>
           )}
 
           {/* Cast Images - Horizontal Scroll */}
           {Array.isArray(movie.actors) && movie.actors.length > 0 && movie.actors.some(a => a.image) && (
             <div>
-              <h3 className="text-2xl font-bold text-white mb-3 uppercase">DIỄN VIÊN</h3>
+              <h3 className="text-left text-2xl font-bold text-white mb-3 uppercase">DIỄN VIÊN</h3>
               <div className="flex gap-4 overflow-x-auto pb-3 custom-scrollbar">
                 {movie.actors.filter(a => a.image).map((a) => (
                   <div key={a.id || a.name} className="flex flex-col items-center gap-2 bg-gray-800 p-3 rounded min-w-[120px]">
@@ -189,26 +179,36 @@ export default function MovieDetail() {
               </div>
             </div>
           )}
-
-          {/* Awards */}
-          {movie.awards && (
-            <div>
-              <h3 className="text-2xl font-bold text-white mb-3 uppercase">GIẢI THƯỞNG</h3>
-              <p className="text-base text-gray-300">{movie.awards}</p>
-            </div>
-          )}
         </div>
       </div>
 
+      {/* Plot */}
+      {movie.plot_full && (
+        <div className="text-left w-full mt-8">
+          <h3 className="text-2xl font-bold text-white mb-3">NỘI DUNG PHIM</h3>
+          <div
+            className={`text-left text-base text-gray-300 leading-relaxed transition-all ${plotExpanded ? '' : 'max-h-36 overflow-hidden'}`}
+            dangerouslySetInnerHTML={{ __html: movie.plot_full }}
+          />
+          <button
+            onClick={() => setPlotExpanded(p => !p)}
+            className="mt-2 text-sm text-yellow-400 font-semibold cursor-pointer hover:underline"
+            aria-expanded={plotExpanded}
+          >
+            {plotExpanded ? 'Thu gọn' : 'Xem thêm'}
+          </button>
+        </div>
+      )}
+
       {/* Reviews */}
       <div className="w-full mt-8">
-        <h2 className="text-2xl font-bold text-white mb-4">REVIEWS ({reviewsMeta.total})</h2>
+        <h2 className="flex text-2xl font-bold text-white mb-4">REVIEWS ({reviewsMeta.total})</h2>
         {reviewsLoading ? (
           <div className="text-gray-400">Đang tải reviews...</div>
         ) : reviews.length === 0 ? (
           <div className="text-gray-400">Chưa có review cho phim này.</div>
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="flex text-left flex-col gap-4">
             {reviews.map((r, idx) => {
               const idKey = r.id || r.username || `rev-${idx}`
               const expanded = expandedReviews.has(idKey)
