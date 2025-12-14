@@ -12,7 +12,7 @@ export default function MovieCard({ movie, variant = 'compact' }) {
 
   return (
     <div
-      className={`relative overflow-hidden rounded-lg bg-gray-900 shadow-lg ${
+      className={`group relative overflow-hidden rounded-lg bg-gray-900 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:z-10 ${
         isLarge ? 'max-w-md' : 'max-w-xs'
       }`}
     >
@@ -62,18 +62,29 @@ export default function MovieCard({ movie, variant = 'compact' }) {
           </div>
         )}
 
-        {/* Short Description - Only show in large variant */}
+        {/* Short Description - Show on hover for compact, always for large */}
         {isLarge && movie.short_description && (
           <p className="text-sm text-gray-400 line-clamp-3">
             {movie.short_description}
           </p>
         )}
 
-        {/* Box Office */}
+        {/* Short Description - Compact variant: show on hover only */}
+        {!isLarge && movie.short_description && (
+          <div className="max-h-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100">
+            <p className="mt-2 text-xs text-gray-400 line-clamp-3">
+              {movie.short_description}
+            </p>
+          </div>
+        )}
+
+        {/* Box Office - Large variant: show on hover only */}
         {isLarge && movie.box_office_revenue && (
-          <p className="text-xs text-gray-500">
-            Box Office: <span className="font-semibold text-gray-300">{movie.box_office_revenue}</span>
-          </p>
+          <div className="max-h-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:max-h-20 group-hover:opacity-100">
+            <p className="text-xs text-gray-500">
+              Box Office: <span className="font-semibold text-gray-300">{movie.box_office_revenue}</span>
+            </p>
+          </div>
         )}
       </div>
     </div>
