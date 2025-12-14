@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Tag, Clock, Calendar, Globe, Languages, NotebookPen  } from 'lucide-react'
 import LoadingSkeleton from '../components/movie/LoadingSkeleton'
 import { getMovie, getMovieReviews } from '../services/api/endpoints/movie'
+import Pagination from '../components/ui/Pagination'
 
 const scrollbarStyles = `
   .custom-scrollbar::-webkit-scrollbar {
@@ -31,6 +32,7 @@ export default function MovieDetail() {
   const [reviewsLoading, setReviewsLoading] = useState(false)
   const [reviewsMeta, setReviewsMeta] = useState({ total: 0, current_page: 1, total_pages: 1, page_size: 10 })
   const [expandedReviews, setExpandedReviews] = useState(new Set())
+  const [reviewsPage, setReviewsPage] = useState(1)
 
   useEffect(() => {
     let mounted = true
@@ -42,6 +44,7 @@ export default function MovieDetail() {
         const data = await getMovie(id)
         if (!mounted) return
         setMovie(data)
+        setReviewsPage(1)
       } catch (err) {
         if (!mounted) return
         setError(err.message || String(err))
@@ -62,10 +65,11 @@ export default function MovieDetail() {
     async function fetchReviews() {
       setReviewsLoading(true)
       try {
-        const res = await getMovieReviews(movie.id, 1, 10)
+        const limit = reviewsMeta.page_size || 10
+        const res = await getMovieReviews(movie.id, reviewsPage, limit)
         if (!mounted) return
         setReviews(Array.isArray(res.data) ? res.data : [])
-        setReviewsMeta({ total: res.total || 0, current_page: res.current_page || 1, total_pages: res.total_pages || 1, page_size: res.page_size || 10 })
+        setReviewsMeta({ total: res.total || 0, current_page: res.current_page || reviewsPage, total_pages: res.total_pages || 1, page_size: res.page_size || limit })
       } catch (err) {
         if (!mounted) return
         console.error(err)
@@ -77,7 +81,7 @@ export default function MovieDetail() {
     }
     fetchReviews()
     return () => { mounted = false }
-  }, [movie && movie.id])
+  }, [movie && movie.id, reviewsPage])
 
   if (loading) return <div className="max-w-[1200px] mx-auto px-4 py-8"><LoadingSkeleton variant="large" /></div>
   if (error) return <div className="max-w-[1200px] mx-auto px-4 py-8 text-red-400">Error: {error}</div>
@@ -250,6 +254,9 @@ export default function MovieDetail() {
                 </div>
               )
             })}
+            <div className="mt-4">
+              <Pagination page={reviewsMeta.current_page || reviewsPage} totalPages={reviewsMeta.total_pages || 1} onChange={(p) => setReviewsPage(p)} />
+            </div>
           </div>
         )}
       </div>
