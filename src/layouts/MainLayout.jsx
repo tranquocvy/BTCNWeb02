@@ -1,7 +1,7 @@
 import React from 'react'
-import Header from '@/components/Header'
-import NavBar from '@/components/NavBar'
-import Footer from '@/components/Footer'
+import Header from '@/components/main/Header'
+import NavBar from '@/components/main/NavBar'
+import Footer from '@/components/main/Footer'
 import { Outlet } from 'react-router-dom'
 
 export default function MainLayout({ children }) {
