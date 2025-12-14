@@ -83,9 +83,11 @@ export async function searchMovies(query, page = 1, limit = 12) {
   })
 
   const items = Array.isArray(res) ? res : res && Array.isArray(res.data) ? res.data : []
-  const total = res && typeof res.total === 'number' ? res.total : null
+  const total = res && typeof res.pagination.total_items === 'number' ? res.pagination.total_items : null
+  const current_page = res && typeof res.pagination.current_page === 'number' ? res.pagination.current_page : 1
+  const total_pages = res && typeof res.pagination.total_pages === 'number' ? res.pagination.total_pages : 1;
 
-  return { data: items, total }
+  return { data: items, total, current_page, total_pages }
 }
 
 export default { fetchTopRevenueMovies, fetchPopularMovies, fetchTopRatedMovies, searchMovies }
