@@ -13,4 +13,17 @@ export async function fetchTopRevenueMovies() {
   return []
 }
 
-export default { fetchTopRevenueMovies }
+/**
+ * Fetch popular movies (endpoint: /movies/most-popular).
+ * Returns approximately 30 movies from page 1.
+ */
+export async function fetchPopularMovies() {
+  const qs = new URLSearchParams({ page: '1', limit: '30' })
+  const data = await request(`/movies/most-popular?${qs.toString()}`, { method: 'GET' })
+
+  if (Array.isArray(data)) return data
+  if (data && Array.isArray(data.data)) return data.data
+  return []
+}
+
+export default { fetchTopRevenueMovies, fetchPopularMovies }
