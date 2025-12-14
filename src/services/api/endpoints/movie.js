@@ -74,6 +74,7 @@ export async function fetchTopRatedMovies() {
 
 /**
  * Search movies by title (endpoint: /movies/search).
+ * Returns { data, total, current_page, total_pages }
  */
 export async function searchMovies(query, page = 1, limit = 12) {
   const qs = new URLSearchParams({ title: String(query || ''), page: String(page), limit: String(limit) })
@@ -86,6 +87,25 @@ export async function searchMovies(query, page = 1, limit = 12) {
   const total = res && typeof res.pagination.total_items === 'number' ? res.pagination.total_items : null
   const current_page = res && typeof res.pagination.current_page === 'number' ? res.pagination.current_page : 1
   const total_pages = res && typeof res.pagination.total_pages === 'number' ? res.pagination.total_pages : 1;
+
+  return { data: items, total, current_page, total_pages }
+}
+
+/**
+ * Search people by name (endpoint: /people/search).
+ * Returns { data, total, current_page, total_pages }
+ */
+export async function searchPeople(query, page = 1, limit = 12) {
+  const qs = new URLSearchParams({ person: String(query || ''), page: String(page), limit: String(limit) })
+  const res = await request(`/movies/search?${qs.toString()}`, {
+    method: 'GET',
+    headers: { person: String(query || '') }
+  })
+
+  const items = Array.isArray(res) ? res : res && Array.isArray(res.data) ? res.data : []
+  const total = res && res.pagination && typeof res.pagination.total_items === 'number' ? res.pagination.total_items : null
+  const current_page = res && res.pagination && typeof res.pagination.current_page === 'number' ? res.pagination.current_page : 1
+  const total_pages = res && res.pagination && typeof res.pagination.total_pages === 'number' ? res.pagination.total_pages : (total ? Math.max(1, Math.ceil(total / limit)) : 1)
 
   return { data: items, total, current_page, total_pages }
 }

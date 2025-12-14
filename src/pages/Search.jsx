@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import MovieCard from '../components/movie/MovieCard'
 import LoadingSkeleton from '../components/movie/LoadingSkeleton'
-import { searchMovies } from '../services/api/endpoints/movie'
+import { searchMovies, searchPeople } from '../services/api/endpoints/movie'
 import Pagination from '../components/ui/Pagination'
 
 const DEFAULT_LIMIT = 12
 
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const title = searchParams.get('title') || ''
+  const type = (searchParams.get('type') || 'Movie')
+  const title = (type === 'Person' ? (searchParams.get('person') || '') : (searchParams.get('title') || ''))
   const pageParam = parseInt(searchParams.get('page') || '1', 10)
 
   const [movies, setMovies] = useState([])
@@ -36,7 +37,13 @@ export default function Search() {
       setError(null)
 
       try {
-        const res = await searchMovies(title.trim(), page, DEFAULT_LIMIT)
+        const query = title.trim()
+        let res
+        if (type === 'Person') {
+          res = await searchPeople(query, page, DEFAULT_LIMIT)
+        } else {
+          res = await searchMovies(query, page, DEFAULT_LIMIT)
+        }
 
         const items = res && Array.isArray(res.data) ? res.data : Array.isArray(res) ? res : []
         const totalCount = res && typeof res.total === 'number' ? res.total : null
@@ -63,7 +70,7 @@ export default function Search() {
     return () => {
       mounted = false
     }
-  }, [title, page])
+  }, [title, page, type])
 
   function goToPage(p) {
     const params = Object.fromEntries([...searchParams])

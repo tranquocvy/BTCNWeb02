@@ -7,13 +7,16 @@ export default function NavBar() {
   const location = useLocation()
   const [searchParams] = useSearchParams()
   const initialTitle = searchParams.get('title') || ''
+  const initialPerson = searchParams.get('person') || ''
   const initialType = searchParams.get('type') || 'Movie'
-  const [query, setQuery] = useState(initialTitle)
+  const initialQuery = initialTitle || initialPerson || ''
+  const [query, setQuery] = useState(initialQuery)
   const [searchType, setSearchType] = useState(initialType)
 
   useEffect(() => {
-    setQuery(initialTitle)
-  }, [initialTitle])
+    const q = (searchParams.get('type') === 'Person') ? (searchParams.get('person') || '') : (searchParams.get('title') || '')
+    setQuery(q)
+  }, [searchParams])
 
   useEffect(() => {
     setSearchType(initialType)
@@ -25,7 +28,11 @@ export default function NavBar() {
     if (trimmed === '') {
       navigate('/search')
     } else {
-      navigate(`/search?title=${encodeURIComponent(trimmed)}&type=${encodeURIComponent(searchType)}`)
+      const params = new URLSearchParams()
+      if (searchType === 'Person') params.set('person', trimmed)
+      else params.set('title', trimmed)
+      params.set('type', searchType)
+      navigate(`/search?${params.toString()}`)
     }
   }
   return (
@@ -53,11 +60,10 @@ export default function NavBar() {
                 </select>
               <input
                 id="search"
-                name="title"
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search movies..."
+                placeholder={searchType === 'Person' ? 'Search people...' : 'Search movies...'}
                 className="h-10 w-56 sm:w-64 px-3 text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-200 dark:border-gray-700 rounded-none focus:outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-400"
               />
               <button
