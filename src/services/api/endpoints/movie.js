@@ -44,4 +44,32 @@ export async function fetchPopularMovies() {
   return results.slice(0, target)
 }
 
-export default { fetchTopRevenueMovies, fetchPopularMovies }
+/**
+ * Fetch top rated movies (endpoint: /movies/top-rated).
+ * Same multi-page aggregation logic as popular.
+ */
+export async function fetchTopRatedMovies() {
+  const target = 30
+  const perRequest = 12
+  let page = 1
+  const results = []
+
+  while (results.length < target) {
+    const qs = new URLSearchParams({ page: String(page), limit: String(perRequest) })
+    const data = await request(`/movies/top-rated?${qs.toString()}`, { method: 'GET' })
+
+    const items = Array.isArray(data) ? data : data && Array.isArray(data.data) ? data.data : []
+    if (!items || items.length === 0) break
+
+    results.push(...items)
+
+    if (items.length < perRequest) break
+
+    page += 1
+    if (page > 10) break
+  }
+
+  return results.slice(0, target)
+}
+
+export default { fetchTopRevenueMovies, fetchPopularMovies, fetchTopRatedMovies }
