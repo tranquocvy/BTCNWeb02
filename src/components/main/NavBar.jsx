@@ -7,11 +7,17 @@ export default function NavBar() {
   const location = useLocation()
   const [searchParams] = useSearchParams()
   const initialTitle = searchParams.get('title') || ''
+  const initialType = searchParams.get('type') || 'Movie'
   const [query, setQuery] = useState(initialTitle)
+  const [searchType, setSearchType] = useState(initialType)
 
   useEffect(() => {
     setQuery(initialTitle)
   }, [initialTitle])
+
+  useEffect(() => {
+    setSearchType(initialType)
+  }, [initialType])
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -19,7 +25,7 @@ export default function NavBar() {
     if (trimmed === '') {
       navigate('/search')
     } else {
-      navigate(`/search?title=${encodeURIComponent(trimmed)}`)
+      navigate(`/search?title=${encodeURIComponent(trimmed)}&type=${encodeURIComponent(searchType)}`)
     }
   }
   return (
@@ -33,8 +39,18 @@ export default function NavBar() {
           </div>
 
           <div className="flex items-center">
-            <form className="flex items-center" onSubmit={handleSubmit}>
+              <form className="flex items-center" onSubmit={handleSubmit}>
               <label htmlFor="search" className="sr-only">Search</label>
+                <select
+                  id="searchType"
+                  name="type"
+                  value={searchType}
+                  onChange={(e) => setSearchType(e.target.value)}
+                  className="h-10 px-2 text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-200 dark:border-gray-700 rounded-l-md focus:outline-none"
+                >
+                  <option value="Movie">Movie</option>
+                  <option value="Person">Person</option>
+                </select>
               <input
                 id="search"
                 name="title"
@@ -42,7 +58,7 @@ export default function NavBar() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search movies..."
-                className="h-10 w-56 sm:w-64 px-3 text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-200 dark:border-gray-700 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-400"
+                className="h-10 w-56 sm:w-64 px-3 text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-200 dark:border-gray-700 rounded-none focus:outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-400"
               />
               <button
                 type="submit"
