@@ -1,30 +1,18 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MovieCard from './MovieCard';
 import { Button } from '../ui/button';
 
 /**
- * MovieList component - Hiển thị danh sách phim dạng grid 3 cột với pagination
- * @param {Array} movies - Mảng danh sách phim
- * @param {number} itemsPerPage - Số phim hiển thị mỗi trang (mặc định 3)
+ * MovieList component - Slider hiển thị 3 phim cùng lúc, có thể slide qua toàn bộ danh sách
+ * @param {Array} movies - Mảng danh sách phim (tất cả movies)
  */
-export default function MovieList({ movies = [], itemsPerPage = 3 }) {
-  const [currentPage, setCurrentPage] = useState(0);
+export default function MovieList({ movies = [] }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Chia movies thành các chunk (mỗi chunk = 1 trang)
-  const pages = useMemo(() => {
-    if (!movies || movies.length === 0) return [];
-    
-    const chunks = [];
-    for (let i = 0; i < movies.length; i += itemsPerPage) {
-      chunks.push(movies.slice(i, i + itemsPerPage));
-    }
-    return chunks;
-  }, [movies, itemsPerPage]);
-
-  const totalPages = pages.length;
-  const currentMovies = pages[currentPage] || [];
+  const ITEMS_PER_SLIDE = 3;
+  const totalSlides = Math.ceil(movies.length / ITEMS_PER_SLIDE);
 
   if (!movies || movies.length === 0) {
     return (
@@ -35,81 +23,100 @@ export default function MovieList({ movies = [], itemsPerPage = 3 }) {
   }
 
   const handlePrevious = () => {
-    if (isTransitioning || currentPage === 0) return;
-    setIsTransitioning(true);
-    setCurrentPage((prev) => prev - 1);
-    setTimeout(() => setIsTransitioning(false), 500);
+    if (isTransitioning || currentIndex === 0) return;
+    setIsTransitioning('prev');
+    setCurrentIndex((prev) => prev - 1);
+    setTimeout(() => setIsTransitioning(false), 600);
   };
 
   const handleNext = () => {
-    if (isTransitioning || currentPage === totalPages - 1) return;
-    setIsTransitioning(true);
-    setCurrentPage((prev) => prev + 1);
-    setTimeout(() => setIsTransitioning(false), 500);
+    if (isTransitioning || currentIndex >= totalSlides - 1) return;
+    setIsTransitioning('next');
+    setCurrentIndex((prev) => prev + 1);
+    setTimeout(() => setIsTransitioning(false), 600);
   };
 
   return (
-    <div className="space-y-6">
-      {/* Movie Grid with Slide Animation */}
-      <div className="relative overflow-hidden">
-        <div
-          className={`grid grid-cols-1 gap-6 transition-all duration-500 md:grid-cols-2 lg:grid-cols-3 ${
-            isTransitioning ? 'translate-x-8 opacity-0' : 'translate-x-0 opacity-100'
-          }`}
-        >
-          {currentMovies.map((movie) => (
-            <div key={movie.id} className="flex justify-center">
-              <MovieCard movie={movie} variant="compact" />
-            </div>
+    <div className="relative mx-auto w-full max-w-[1200px]">
+      {/* Slider Container */}
+      <div className="relative overflow-hidden rounded-xl bg-gray-950">
+        <div className="relative overflow-hidden px-4 py-8">
+          {/* Slider Track - chứa tất cả movies */}
+          <div
+            className="flex transition-transform duration-600 ease-in-out"
+            style={{
+              transform: `translateX(-${currentIndex * 100}%)`
+            }}
+          >
+            {/* Render từng slide (mỗi slide có 3 phim) */}
+            {Array.from({ length: totalSlides }).map((_, slideIndex) => {
+              const startIdx = slideIndex * ITEMS_PER_SLIDE;
+              const slideMovies = movies.slice(startIdx, startIdx + ITEMS_PER_SLIDE);
+              
+              return (
+                <div
+                  key={slideIndex}
+                  className="flex min-w-full gap-0"
+                  style={{ width: '100%' }}
+                >
+                  {slideMovies.map((movie) => (
+                    <div key={movie.id} className="w-1/3 flex-shrink-0 px-3">
+                      <MovieCard movie={movie} variant="compact" />
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Navigation Buttons */}
+        <div className="absolute left-4 right-4 top-1/2 flex -translate-y-1/2 justify-between">
+          <Button
+            onClick={handlePrevious}
+            disabled={currentIndex === 0 || isTransitioning}
+            variant="ghost"
+            size="icon"
+            className="h-12 w-12 rounded-full bg-black/50 text-white backdrop-blur-sm transition-all hover:bg-black/70 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            <ChevronLeft className="h-8 w-8" />
+          </Button>
+
+          <Button
+            onClick={handleNext}
+            disabled={currentIndex >= totalSlides - 1 || isTransitioning}
+            variant="ghost"
+            size="icon"
+            className="h-12 w-12 rounded-full bg-black/50 text-white backdrop-blur-sm transition-all hover:bg-black/70 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            <ChevronRight className="h-8 w-8" />
+          </Button>
+        </div>
+
+        {/* Indicators */}
+        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+          {Array.from({ length: totalSlides }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                if (!isTransitioning && index !== currentIndex) {
+                  setIsTransitioning(index > currentIndex ? 'next' : 'prev');
+                  setCurrentIndex(index);
+                  setTimeout(() => setIsTransitioning(false), 600);
+                }
+              }}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === currentIndex ? 'w-8 bg-white' : 'w-2 bg-white/50 hover:bg-white/75'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
           ))}
         </div>
       </div>
 
-      {/* Pagination Controls */}
-      <div className="flex items-center justify-center gap-4">
-        <Button
-          onClick={handlePrevious}
-          disabled={currentPage === 0 || isTransitioning}
-          variant="outline"
-          className="flex items-center gap-2 rounded-lg bg-gray-800 px-6 py-3 text-white transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <ChevronLeft className="h-5 w-5" />
-          <span>Previous</span>
-        </Button>
-
-        <div className="text-sm text-gray-400">
-          <span className="font-bold text-white">{currentPage + 1}</span> / {totalPages}
-        </div>
-
-        <Button
-          onClick={handleNext}
-          disabled={currentPage === totalPages - 1 || isTransitioning}
-          variant="outline"
-          className="flex items-center gap-2 rounded-lg bg-gray-800 px-6 py-3 text-white transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <span>Next</span>
-          <ChevronRight className="h-5 w-5" />
-        </Button>
-      </div>
-
-      {/* Page Indicators */}
-      <div className="flex justify-center gap-2">
-        {pages.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => {
-              if (!isTransitioning && index !== currentPage) {
-                setIsTransitioning(true);
-                setCurrentPage(index);
-                setTimeout(() => setIsTransitioning(false), 500);
-              }
-            }}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              index === currentPage ? 'w-8 bg-white' : 'w-2 bg-white/50 hover:bg-white/75'
-            }`}
-            aria-label={`Go to page ${index + 1}`}
-          />
-        ))}
+      {/* Counter */}
+      <div className="mt-4 text-center text-sm text-gray-400">
+        {currentIndex + 1} / {totalSlides}
       </div>
     </div>
   );
