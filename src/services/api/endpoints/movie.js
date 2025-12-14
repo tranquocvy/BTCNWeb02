@@ -119,4 +119,23 @@ export async function getMovie(id) {
   return res && res.data ? res.data : res
 }
 
-export default { fetchTopRevenueMovies, fetchPopularMovies, fetchTopRatedMovies, searchMovies, getMovie }
+/**
+ * Get reviews for a movie (endpoint: /movie/{id}/reviews)
+ * Returns an object: { data: [], total, current_page, total_pages, page_size }
+ */
+export async function getMovieReviews(id, page = 1, limit = 10) {
+  if (!id) return { data: [], total: 0, current_page: 1, total_pages: 1, page_size: Number(limit) }
+  const qs = new URLSearchParams({ page: String(page), limit: String(limit) })
+  const res = await request(`/movie/${id}/reviews?${qs.toString()}`, { method: 'GET' })
+
+  const items = Array.isArray(res && res.results) ? res.results : Array.isArray(res && res.data) ? res.data : Array.isArray(res) ? res : []
+
+  const total = res && res.pagination && typeof res.pagination.total_items === 'number' ? res.pagination.total_items : (items ? items.length : 0)
+  const current_page = res && res.pagination && typeof res.pagination.current_page === 'number' ? res.pagination.current_page : Number(page)
+  const total_pages = res && res.pagination && typeof res.pagination.total_pages === 'number' ? res.pagination.total_pages : (total ? Math.max(1, Math.ceil(total / limit)) : 1)
+  const page_size = res && res.pagination && typeof res.pagination.page_size === 'number' ? res.pagination.page_size : Number(limit)
+
+  return { data: items, total, current_page, total_pages, page_size }
+}
+
+export default { fetchTopRevenueMovies, fetchPopularMovies, fetchTopRatedMovies, searchMovies, getMovie, getMovieReviews }
