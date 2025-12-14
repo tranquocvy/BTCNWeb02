@@ -26,6 +26,7 @@ export default function MovieDetail() {
   const [movie, setMovie] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [plotExpanded, setPlotExpanded] = useState(false)
 
   useEffect(() => {
     let mounted = true
@@ -118,7 +119,7 @@ export default function MovieDetail() {
             {Array.isArray(movie.directors) && movie.directors.length > 0 && (
               <div className="flex items-center gap-3">
                 <NotebookPen  className="w-5 h-5 text-yellow-400" />
-                <span className="font-semibold">Đạo diễn:</span> {movie.directors.map(d => d.name).join(', ')}
+                <span className="text-lg">{movie.directors.map(d => d.name).join(', ')}</span>
               </div>
             )}
 
@@ -133,10 +134,17 @@ export default function MovieDetail() {
           {movie.plot_full && (
             <div>
               <h3 className="text-2xl font-bold text-white mb-3 items-left">NỘI DUNG PHIM</h3>
-              <div 
-                className="text-base text-gray-300 leading-relaxed"
+              <div
+                className={`text-base text-gray-300 leading-relaxed transition-all ${plotExpanded ? '' : 'max-h-36 overflow-hidden'}`}
                 dangerouslySetInnerHTML={{ __html: movie.plot_full }}
               />
+              <button
+                onClick={() => setPlotExpanded(p => !p)}
+                className="mt-2 text-sm text-yellow-400 font-semibold cursor-pointer hover:underline"
+                aria-expanded={plotExpanded}
+              >
+                {plotExpanded ? 'Thu gọn' : 'Xem thêm'}
+              </button>
             </div>
           )}
 
