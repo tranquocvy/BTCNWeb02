@@ -1,7 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { Tag, Clock, Calendar, Globe, Languages, NotebookPen  } from 'lucide-react'
 import LoadingSkeleton from '../components/movie/LoadingSkeleton'
 import { getMovie } from '../services/api/endpoints/movie'
+
+const scrollbarStyles = `
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #1f2937;
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+`
 
 export default function MovieDetail() {
   const { id } = useParams()
@@ -38,8 +56,10 @@ export default function MovieDetail() {
   if (!movie) return <div className="max-w-[1200px] mx-auto px-4 py-8 text-gray-400">No movie found</div>
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row gap-8">
+    <>
+      <style>{scrollbarStyles}</style>
+      <div className="max-w-[1200px] mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row gap-8">
         {/* Poster */}
         <div className="md:w-2/5 self-start">
           {movie.image && (
@@ -55,60 +75,80 @@ export default function MovieDetail() {
         <div className="md:w-3/5 space-y-6">
           {/* Title */}
           {movie.full_title && (
-            <h1 className="text-4xl font-bold text-white">{movie.full_title}</h1>
+            <h1 className="text-5xl font-extrabold text-white uppercase tracking-wide">{movie.full_title}</h1>
           )}
 
           {/* Meta info */}
-          <div className="space-y-2 text-gray-300">
-            {movie.year && (
-              <div><span className="font-semibold">Year:</span> {movie.year}</div>
+          <div className="space-y-3 text-gray-200">
+            {Array.isArray(movie.genres) && movie.genres.length > 0 && (
+              <div className="flex items-center gap-3">
+                <Tag className="w-5 h-5 text-yellow-400" />
+                <span className="text-lg">{movie.genres.join(', ')}</span>
+              </div>
             )}
 
             {movie.runtime && (
-              <div><span className="font-semibold">Runtime:</span> {movie.runtime}</div>
+              <div className="flex items-center gap-3">
+                <Clock className="w-5 h-5 text-yellow-400" />
+                <span className="text-lg">{movie.runtime}</span>
+              </div>
             )}
 
-            {Array.isArray(movie.genres) && movie.genres.length > 0 && (
-              <div><span className="font-semibold">Genres:</span> {movie.genres.join(', ')}</div>
+            {movie.year && (
+              <div className="flex items-center gap-3">
+                <Calendar className="w-5 h-5 text-yellow-400" />
+                <span className="text-lg">{movie.year}</span>
+              </div>
             )}
 
             {Array.isArray(movie.countries) && movie.countries.length > 0 && (
-              <div><span className="font-semibold">Countries:</span> {movie.countries.join(', ')}</div>
+              <div className="flex items-center gap-3">
+                <Globe className="w-5 h-5 text-yellow-400" />
+                <span className="text-lg">{movie.countries.join(', ')}</span>
+              </div>
             )}
 
             {Array.isArray(movie.languages) && movie.languages.length > 0 && (
-              <div><span className="font-semibold">Languages:</span> {movie.languages.join(', ')}</div>
+              <div className="flex items-center gap-3">
+                <Languages className="w-5 h-5 text-yellow-400" />
+                <span className="text-lg">{movie.languages.join(', ')}</span>
+              </div>
+            )}
+
+            {Array.isArray(movie.directors) && movie.directors.length > 0 && (
+              <div className="flex items-center gap-3">
+                <NotebookPen  className="w-5 h-5 text-yellow-400" />
+                <span className="font-semibold">Đạo diễn:</span> {movie.directors.map(d => d.name).join(', ')}
+              </div>
+            )}
+
+            {movie.rating_age && (
+              <div className="flex items-center gap-3">
+                <span className="bg-yellow-400 text-black px-3 py-1 rounded font-bold text-base">{movie.rating_age}</span>
+              </div>
             )}
           </div>
 
-          {/* Directors */}
-          {Array.isArray(movie.directors) && movie.directors.length > 0 && (
+          {/* Plot */}
+          {movie.plot_full && (
             <div>
-              <h3 className="font-bold text-white text-lg mb-2">Directors</h3>
-              <div className="flex flex-wrap gap-2">
-                {movie.directors.map((d) => (
-                  <div key={d.id || d.name} className="flex items-center gap-2 bg-gray-800 p-2 rounded">
-                    {d.image && (
-                      <img src={d.image} alt={d.name} className="w-10 h-10 rounded-full object-cover" />
-                    )}
-                    <span className="text-sm text-gray-200">{d.name}</span>
-                  </div>
-                ))}
-              </div>
+              <h3 className="text-2xl font-bold text-white mb-3 items-left">NỘI DUNG PHIM</h3>
+              <div 
+                className="text-base text-gray-300 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: movie.plot_full }}
+              />
             </div>
           )}
 
-          {/* Actors */}
-          {Array.isArray(movie.actors) && movie.actors.length > 0 && (
+          {/* Cast Images - Horizontal Scroll */}
+          {Array.isArray(movie.actors) && movie.actors.length > 0 && movie.actors.some(a => a.image) && (
             <div>
-              <h3 className="font-bold text-white text-lg mb-2">Actors</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {movie.actors.map((a) => (
-                  <div key={a.id || a.name} className="flex items-center gap-2 bg-gray-800 p-2 rounded">
-                    {a.image && (
-                      <img src={a.image} alt={a.name} className="w-10 h-10 rounded-full object-cover" />
-                    )}
-                    <span className="text-sm text-gray-200">{a.name}</span>
+              <h3 className="text-2xl font-bold text-white mb-3 uppercase">DIỄN VIÊN</h3>
+              <div className="flex gap-4 overflow-x-auto pb-3 custom-scrollbar">
+                {movie.actors.filter(a => a.image).map((a) => (
+                  <div key={a.id || a.name} className="flex flex-col items-center gap-2 bg-gray-800 p-3 rounded min-w-[120px]">
+                    <img src={a.image} alt={a.name} className="w-20 h-20 rounded-full object-cover" />
+                    <span className="text-sm text-gray-200 text-center">{a.name}</span>
                   </div>
                 ))}
               </div>
@@ -118,12 +158,13 @@ export default function MovieDetail() {
           {/* Awards */}
           {movie.awards && (
             <div>
-              <h3 className="font-bold text-white text-lg mb-2">Awards</h3>
-              <p className="text-sm text-gray-300">{movie.awards}</p>
+              <h3 className="text-2xl font-bold text-white mb-3 uppercase">GIẢI THƯỞNG</h3>
+              <p className="text-base text-gray-300">{movie.awards}</p>
             </div>
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
