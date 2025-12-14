@@ -12,7 +12,7 @@ export default function MovieCard({ movie, variant = 'compact' }) {
 
   return (
     <div
-      className={`group relative overflow-hidden rounded-lg bg-gray-900 shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 ${
+      className={`relative overflow-hidden rounded-lg bg-gray-900 shadow-lg ${
         isLarge ? 'max-w-md' : 'max-w-xs'
       }`}
     >
@@ -21,7 +21,7 @@ export default function MovieCard({ movie, variant = 'compact' }) {
         <img
           src={movie.image}
           alt={movie.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="h-full w-full object-cover"
           loading="lazy"
         />
         {/* Overlay gradient */}
@@ -69,7 +69,7 @@ export default function MovieCard({ movie, variant = 'compact' }) {
           </p>
         )}
 
-        {/* Box Office - Optional */}
+        {/* Box Office */}
         {isLarge && movie.box_office_revenue && (
           <p className="text-xs text-gray-500">
             Box Office: <span className="font-semibold text-gray-300">{movie.box_office_revenue}</span>
