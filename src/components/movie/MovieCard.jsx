@@ -1,4 +1,5 @@
 import { Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 /**
  * MovieCard component - Hiển thị thông tin cơ bản của phim
@@ -11,11 +12,12 @@ export default function MovieCard({ movie, variant = 'compact' }) {
   const isLarge = variant === 'large';
 
   return (
-    <div
-      className={`group relative overflow-visible transition-all duration-300 hover:scale-110 hover:z-30 ${
-        isLarge ? 'w-full max-w-md h-[610px]' : 'w-full max-w-xs h-[480px]'
-      }`}
-    >
+    <Link to={`/movie/${movie.id}`} className="group block">
+      <div
+        className={`relative overflow-visible transition-all duration-300 hover:scale-110 hover:z-30 ${
+          isLarge ? 'w-full max-w-md h-[610px]' : 'w-full max-w-xs h-[480px]'
+        }`}
+      >
       <div className="relative h-full w-full overflow-hidden rounded-lg bg-gray-900 shadow-lg transition-all duration-300 hover:shadow-2xl">
         {/* Movie Poster - Full height */}
         <div className="relative h-full overflow-hidden">
@@ -72,6 +74,7 @@ export default function MovieCard({ movie, variant = 'compact' }) {
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </Link>
   );
 }
