@@ -4,11 +4,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
 import { registerSchema } from '../../lib/authSchema'
 import { registerUser } from '../../services/api/endpoints/auth'
+import { useAuth } from '../../context/AuthContext'
 
 export default function Register({ onSubmit }) {
   const navigate = useNavigate()
   const [serverError, setServerError] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
+  const auth = useAuth()
 
   const {
     register,
@@ -22,10 +24,12 @@ export default function Register({ onSubmit }) {
       const res = await registerUser(data)
       const message = res?.message || res?.msg || 'Đăng ký thành công'
       setSuccessMessage(message)
-      if (res && (res.token || res.access_token || res.accessToken)) {
-        const token = res.token || res.access_token || res.accessToken
-        localStorage.setItem('auth_token', token)
-      }
+      const token = res?.token || res?.access_token || res?.accessToken
+      const user = res?.user || res?.data?.user || null
+      if (token) localStorage.setItem('auth_token', token)
+      if (user) localStorage.setItem('auth_user', JSON.stringify(user))
+      // update global auth state if available
+      auth.login(user, token)
       if (onSubmit) onSubmit(data, res)
       setTimeout(() => navigate('/login'), 2000)
     } catch (err) {

@@ -1,17 +1,42 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from 'react-router-dom'
 import { loginSchema } from '../../lib/authSchema'
+import { loginUser } from '../../services/api/endpoints/auth'
+import { useAuth } from '../../context/AuthContext'
 
 export default function Login({ onSubmit }) {
+  const navigate = useNavigate()
+  const [serverError, setServerError] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
+  const auth = useAuth()
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(loginSchema) })
 
-  const submitHandler = onSubmit ? handleSubmit(onSubmit) : handleSubmit((data) => {
-    console.log('Login data', data)
+  const submitHandler = handleSubmit(async (data) => {
+    setServerError(null)
+    setSuccessMessage(null)
+    try {
+      const res = await loginUser(data)
+      const token = res?.token || res?.access_token || res?.accessToken || (res && res.data && res.data.token)
+      const user = res?.user || res?.data?.user || null
+      const message = res?.message || res?.msg || 'Đăng nhập thành công'
+      if (token) localStorage.setItem('auth_token', token)
+      if (user) localStorage.setItem('auth_user', JSON.stringify(user))
+      // update global auth state
+      auth.login(user, token)
+      setSuccessMessage(message)
+      if (onSubmit) return onSubmit(data, res)
+      // Navigate after short delay so user sees success message
+      setTimeout(() => navigate('/'), 1200)
+    } catch (err) {
+      setServerError(err.message || String(err))
+    }
   })
 
   return (
@@ -19,15 +44,21 @@ export default function Login({ onSubmit }) {
       onSubmit={submitHandler}
       className="text-left max-w-md mx-auto bg-trans backdrop-blur-md border border-white/10 p-6 rounded-xl shadow-md transition"
     >
+      {successMessage && (
+        <div role="status" aria-live="polite" className="mb-4 p-3 rounded-md bg-green-700 bg-opacity-90 text-white text-sm font-medium">
+          {successMessage}
+        </div>
+      )}
+
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-200 mb-1">Email</label>
+        <label className="block text-sm font-medium text-gray-200 mb-1">Username</label>
         <input
-          type="email"
-          {...register('email')}
+          type="text"
+          {...register('username')}
           className="w-full px-3 py-2 rounded bg-trans border border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
-        {errors.email && (
-          <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+        {errors.username && (
+          <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
         )}
       </div>
 
@@ -51,6 +82,7 @@ export default function Login({ onSubmit }) {
         >
           {isSubmitting ? 'Submitting...' : 'Login'}
         </button>
+        {serverError && <p className="text-red-400 text-sm mt-2">{serverError}</p>}
       </div>
     </form>
   )
