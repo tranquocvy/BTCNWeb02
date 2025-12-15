@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { updateProfileSchema } from '../lib/authSchema'
 import { useAuth } from '../context/AuthContext'
 import { getUserProfile, updateUserProfile } from '../services/api/endpoints/auth'
-import { User, Mail, Phone, Calendar, Shield, Edit2, Save, X } from 'lucide-react'
+import { User, Mail, Phone, Calendar, Shield, Edit2, Save, X, Heart } from 'lucide-react'
 import MainLayout from '../layouts/MainLayout'
 
 export default function Profile() {
@@ -134,11 +135,15 @@ const onSubmit = async (data) => {
                 </div>
               </div>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 items-center">
+              <Link to="/favorites" className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg flex items-center gap-2 transition">
+                <Heart size={16} />
+                Yêu thích
+              </Link>
               {!isEditing ? (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg flex items-center gap-2 transition"
+                  className="px-4 py-2 bg-white/20 hover:bg-white/30 cursor-pointer text-white rounded-lg flex items-center gap-2 transition"
                 >
                   <Edit2 size={18} />
                   Chỉnh sửa
@@ -147,14 +152,14 @@ const onSubmit = async (data) => {
                 <>
                   <button
                     onClick={handleSubmit(onSubmit)}
-                    className="px-4 py-2 bg-gradient-to-r from-[#682480] to-[#3864CC] hover:opacity-90 text-white rounded-lg flex items-center gap-2 transition"
+                    className="px-4 py-2 bg-gradient-to-r cursor-pointer from-[#682480] to-[#3864CC] hover:opacity-90 text-white rounded-lg flex items-center gap-2 transition"
                   >
                     <Save size={18} />
                     Lưu
                   </button>
                   <button
                     onClick={handleCancel}
-                    className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg flex items-center gap-2 transition"
+                    className="px-4 py-2 bg-gray-500 cursor-pointer hover:bg-gray-600 text-white rounded-lg flex items-center gap-2 transition"
                   >
                     <X size={18} />
                     Hủy
