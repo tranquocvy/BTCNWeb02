@@ -41,7 +41,7 @@ export default function Favorites() {
   }, [user, navigate])
 
   const handleRemoveFavorite = async (movieId, event) => {
-    event.preventDefault() // Prevent navigation to movie detail
+    event.preventDefault()
     event.stopPropagation()
     
     if (removingIds.has(movieId)) return
@@ -144,8 +144,8 @@ function FavoriteMovieCard({ movie, onRemove, isRemoving }) {
           {/* Movie Poster */}
           <div className="relative h-full overflow-hidden">
             <img
-              src={movie.image}
-              alt={movie.title}
+              src={movie.image_url || movie.image}
+              alt={movie.full_title || movie.title}
               className="h-full w-full object-cover"
               loading="lazy"
             />
@@ -173,9 +173,9 @@ function FavoriteMovieCard({ movie, onRemove, isRemoving }) {
           {/* Info Overlay - Always Visible */}
           <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
             <h3 className="font-bold text-white line-clamp-2 text-lg mb-2">
-              {movie.title}
+              {movie.full_title || movie.title}
             </h3>
-            <p className="text-sm text-gray-200 font-medium mb-2">Năm: {movie.year}</p>
+            <p className="text-sm text-gray-200 font-medium mb-2">Year: {movie.release_year || movie.year}</p>
 
             {/* Genres */}
             {movie.genres && movie.genres.length > 0 && (
@@ -191,10 +191,10 @@ function FavoriteMovieCard({ movie, onRemove, isRemoving }) {
               </div>
             )}
 
-            {/* Short Description */}
-            {movie.short_description && movie.short_description !== 'string' && (
-              <p className="text-xs text-gray-300 line-clamp-2">
-                {movie.short_description}
+            {/* Plot - Show on hover */}
+            {movie.plot && movie.plot !== 'string' && (
+              <p className="text-xs text-gray-300 line-clamp-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {movie.plot}
               </p>
             )}
           </div>
