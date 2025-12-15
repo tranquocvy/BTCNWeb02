@@ -14,7 +14,7 @@ export default function MovieCard({ movie, variant = 'compact' }) {
   return (
     <Link to={`/movie/${movie.id}`} className="group block">
       <div
-        className={`relative overflow-visible transition-all duration-300 hover:scale-110 hover:z-30 ${
+        className={`relative text-gray-200 overflow-visible transition-all duration-300 hover:scale-110 hover:z-30 ${
           isLarge ? 'w-full max-w-md h-[610px]' : 'w-full max-w-xs h-[480px]'
         }`}
       >
