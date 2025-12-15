@@ -143,7 +143,13 @@ export default function Favorites() {
             </div>
 
             <div className="mt-8">
-              <Pagination page={page} totalPages={Math.max(1, Math.ceil(favorites.length / limit))} onChange={(p) => setPage(p)} />
+              <Pagination
+                page={page}
+                totalPages={Math.max(1, Math.ceil(favorites.length / limit))}
+                totalItems={favorites.length}
+                pageSize={limit}
+                onChange={(p) => setPage(p)}
+              />
             </div>
           </>
         )}

@@ -122,7 +122,13 @@ export default function PersonDetail() {
           </div>
 
           <div className="mt-6">
-            <Pagination page={kfPage} totalPages={Math.max(1, Math.ceil(person.known_for.length / kfLimit))} onChange={(p) => setKfPage(p)} />
+            <Pagination
+              page={kfPage}
+              totalPages={Math.max(1, Math.ceil(person.known_for.length / kfLimit))}
+              totalItems={person.known_for.length}
+              pageSize={kfLimit}
+              onChange={(p) => setKfPage(p)}
+            />
           </div>
         </div>
       )}

@@ -348,7 +348,13 @@ export default function MovieDetail() {
               )
             })}
             <div className="mt-4">
-              <Pagination page={reviewsMeta.current_page || reviewsPage} totalPages={reviewsMeta.total_pages || 1} onChange={(p) => setReviewsPage(p)} />
+              <Pagination
+                page={reviewsMeta.current_page || reviewsPage}
+                totalPages={reviewsMeta.total_pages || 1}
+                totalItems={typeof reviewsMeta.total === 'number' ? reviewsMeta.total : null}
+                pageSize={typeof reviewsMeta.page_size === 'number' ? reviewsMeta.page_size : null}
+                onChange={(p) => setReviewsPage(p)}
+              />
             </div>
           </div>
         )}

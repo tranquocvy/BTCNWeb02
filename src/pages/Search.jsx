@@ -60,8 +60,8 @@ export default function Search() {
         if (!mounted) return
         setError(err.message || String(err))
       } finally {
-        if (!mounted) return
-        setLoading(false)
+        if (!mounted)
+        {setLoading(false)}
       }
     }
 
@@ -116,6 +116,8 @@ export default function Search() {
               <Pagination
                 page={page}
                 totalPages={totalPages || 0}
+                totalItems={typeof total === 'number' ? total : null}
+                pageSize={DEFAULT_LIMIT}
                 onChange={(p) => goToPage(p)}
               />
             </div>
