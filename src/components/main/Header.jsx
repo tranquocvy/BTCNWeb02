@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Settings } from 'lucide-react'
+import { Settings, CircleUser } from 'lucide-react'
 
 export default function Header() {
   const getInitialTheme = () => {
@@ -53,6 +53,11 @@ export default function Header() {
                   style={{ transform: isDark ? 'translateX(24px)' : 'translateX(0)', transition: 'transform 150ms ease' }}
                 />
               </button>
+
+              <Link to="/login" className="flex items-center gap-2 text-white hover:underline">
+                <CircleUser size={34} />
+                <span className="text-sm">Đăng nhập</span>
+              </Link>
 
               <Settings className="text-white" size={18} />
             </div>
