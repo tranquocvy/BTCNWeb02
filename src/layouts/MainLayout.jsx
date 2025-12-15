@@ -40,7 +40,7 @@ export default function MainLayout({ children }) {
   }, [])
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
+    <div className="border border-black/50 min-h-screen flex flex-col" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
       <Header />
       <NavBar />
       <main className="flex-1 max-w-[1200px] mx-auto w-full px-4 sm:px-6 lg:px-8">
@@ -90,19 +90,19 @@ export default function MainLayout({ children }) {
               <>
                 {/* Top 5 Movies Section */}
                 <section>
-                  <h2 className="mb-8 text-center text-4xl font-bold text-white">Top 5 Movies</h2>
+                  <h2 className="m-4 text-left text-4xl font-bold text-black/60 dark:text-white/60">Top 5 Movies</h2>
                   <HeroSlide movies={top5Movies} />
                 </section>
 
                 {/* Popular Movies Section */}
                 <section>
-                  <h2 className="mb-8 text-center text-4xl font-bold text-white">Popular Movies</h2>
+                  <h2 className="m-4 text-left text-4xl font-bold text-black/60 dark:text-white/60">Popular Movies</h2>
                   <MovieList movies={popularMovies} />
                 </section>
 
                 {/* Top Rated Movies Section */}
                 <section>
-                  <h2 className="mb-8 text-center text-4xl font-bold text-white">Top Rated Movies</h2>
+                  <h2 className="m-4 text-left text-4xl font-bold text-black/60 dark:text-white/60">Top Rated Movies</h2>
                   <MovieList movies={topRatedMovies} />
                 </section>
               </>

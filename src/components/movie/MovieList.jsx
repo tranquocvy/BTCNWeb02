@@ -39,8 +39,8 @@ export default function MovieList({ movies = [] }) {
   return (
     <div className="relative mx-auto w-full max-w-[1200px]">
       {/* Slider Container */}
-      <div className="relative overflow-hidden rounded-xl bg-gray-950">
-        <div className="relative overflow-hidden px-4 py-8">
+      <div className="relative overflow-hidden rounded-xl">
+        <div className="relative overflow-hidden px-1 py-8">
           {/* Slider Track - chứa tất cả movies */}
           <div
             className="flex transition-transform duration-600 ease-in-out"
@@ -71,7 +71,7 @@ export default function MovieList({ movies = [] }) {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="absolute left-4 right-4 top-1/2 flex -translate-y-1/2 justify-between">
+        <div className="absolute left-1 right-1 top-1/2 flex -translate-y-1/2 justify-between">
           <Button
             onClick={handlePrevious}
             disabled={currentIndex === 0 || isTransitioning}
@@ -106,7 +106,7 @@ export default function MovieList({ movies = [] }) {
                 }
               }}
               className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentIndex ? 'w-8 bg-white' : 'w-2 bg-white/50 hover:bg-white/75'
+                index === currentIndex ? 'w-8 bg-black dark:bg-white' : 'w-2 bg-black/50 dark:bg-white/50 hover:bg-black/75 hover:dark:bg-white/75'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -115,7 +115,7 @@ export default function MovieList({ movies = [] }) {
       </div>
 
       {/* Counter */}
-      <div className="mt-4 text-center text-sm text-gray-400">
+      <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-200">
         {currentIndex + 1} / {totalSlides}
       </div>
     </div>

@@ -30,7 +30,7 @@ export default function Header() {
   const toggleTheme = () => setIsDark((v) => !v)
 
   return (
-    <header className="sticky top-0 left-0 right-0 z-50 bg-gradient-to-br from-[#682480] to-[#3864CC] dark:from-[#3b1464] dark:to-[#123066] text-white shadow-lg w-full">
+    <header className="sticky top-0 left-0 right-0 z-50 bg-gradient-to-br from-[#682480] to-[#3864CC] dark:from-[#3b1464] dark:to-[#123066] text-white dark:text-gray-400 shadow-lg w-full">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-16">
             <div className="flex-0">
@@ -38,7 +38,7 @@ export default function Header() {
             </div>
 
             <div className="flex-1 flex justify-center">
-              <div className="text-lg font-semibold">Moviews info</div>
+              <div className="text-lg font-semibold">Movies info</div>
             </div>
 
             <div className="flex-0 flex items-center gap-3">

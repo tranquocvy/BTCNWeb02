@@ -38,15 +38,15 @@ export default function HeroSlide({ movies = [] }) {
   return (
     <div className="relative mx-auto w-full max-w-[1200px]">
       {/* Hero Slide Container */}
-      <div className="relative overflow-hidden rounded-xl bg-gray-950 shadow-2xl">
+      <div className="relative rounded-xl shadow-2xl">
         {/* Background Image with Blur */}
         <div className="absolute inset-0">
           <img
             src={currentMovie.image}
             alt=""
-            className="h-full w-full object-cover opacity-20 blur-2xl"
+            className="h-full w-full object-cover blur-sm"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-950/50 via-gray-950/80 to-gray-950" />
+          <div className="absolute inset-0 bg-gradient-to-b via-gray-10 to-gray-10" />
         </div>
 
         {/* Content - Centered Movie Card */}
@@ -62,7 +62,7 @@ export default function HeroSlide({ movies = [] }) {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="absolute left-4 right-4 top-1/2 flex -translate-y-1/2 justify-between">
+        <div className="absolute left-1 right-1 top-1/2 flex -translate-y-1/2 justify-between">
           <Button
             onClick={handlePrev}
             disabled={isTransitioning}
@@ -108,7 +108,7 @@ export default function HeroSlide({ movies = [] }) {
       </div>
 
       {/* Counter */}
-      <div className="mt-4 text-center text-sm text-gray-400">
+      <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-200">
         {currentIndex + 1} / {movies.length}
       </div>
     </div>
