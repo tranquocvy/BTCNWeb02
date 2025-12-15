@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import Header from '@/components/main/Header'
 import NavBar from '@/components/main/NavBar'
 import Footer from '@/components/main/Footer'
@@ -16,7 +17,12 @@ export default function MainLayout({ children }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  const location = useLocation()
+
   useEffect(() => {
+    if (location.pathname !== '/') return
+
+    let mounted = true
     async function loadMovies() {
       try {
         setLoading(true)
@@ -25,19 +31,25 @@ export default function MainLayout({ children }) {
           fetchPopularMovies(),
           fetchTopRatedMovies()
         ])
+        if (!mounted) return
         setTop5Movies(top5Data)
         setPopularMovies(popularData)
         setTopRatedMovies(topRatedData)
+        setError(null)
       } catch (err) {
         console.error('Error loading movies:', err)
+        if (!mounted) return
         setError(err.message)
       } finally {
-        setLoading(false)
+        if (mounted) {
+          setLoading(false)
+        }
       }
     }
 
     loadMovies()
-  }, [])
+    return () => { mounted = false }
+  }, [location.pathname])
 
   return (
     <div className="border border-black/50 min-h-screen flex flex-col" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
