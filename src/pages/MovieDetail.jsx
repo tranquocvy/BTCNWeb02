@@ -245,9 +245,12 @@ export default function MovieDetail() {
               <h3 className="text-left text-2xl font-bold text-black/80 dark:text-gray-200 mb-3 uppercase">DIỄN VIÊN</h3>
               <div className="flex gap-4 overflow-x-auto pb-3 custom-scrollbar">
                 {movie.actors.filter(a => a.image).map((a) => (
-                  <Link key={a.id || a.name} to={`/person/${a.id || a.name}`} className="flex flex-col items-start gap-2 bg-gray-800 p-3 rounded min-w-[120px] hover:brightness-110">
-                    <img src={a.image} alt={a.name} className="w-20 h-20 rounded-full object-cover" />
-                    <span className="text-sm text-gray-200 text-left w-full hover:underline">{a.name}</span>
+                  <Link key={a.id || a.name} to={`/person/${a.id || a.name}`} className="flex flex-col items-center gap-2 min-w-[100px] hover:brightness-110">
+                    <img src={a.image} alt={a.name} className="border border-gray-400 text-black/80 dark:text-gray-400 w-24 h-24 rounded-full object-cover ring-2 ring-transparent hover:ring-sky-400 transition" />
+                    <span className="text-sm text-gray-600 dark:text-gray-200 text-center font-semibold hover:underline">{a.name}</span>
+                    {a.character ? (
+                      <span className="text-xs text-gray-500 dark:text-gray-400 text-center">{a.character}</span>
+                    ) : null}
                   </Link>
                 ))}
               </div>

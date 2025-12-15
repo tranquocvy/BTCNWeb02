@@ -29,7 +29,7 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
     <div className="flex flex-col items-center gap-3">
       {/* Summary line above controls */}
       {showSummary && totalItems > 0 && (
-        <div className="text-sm text-gray-300 dark:text-gray-400 font-medium">
+        <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">
           Showing <span className="font-semibold">{Math.min((page - 1) * pageSize + 1, totalItems)}</span> to <span className="font-semibold">{Math.min(page * pageSize, totalItems)}</span> of <span className="font-semibold">{totalItems}</span>
         </div>
       )}
