@@ -7,6 +7,7 @@ import MovieDetail from './pages/MovieDetail'
 import PersonDetail from './pages/PersonDetail'
 import AuthPage from './pages/Auth'
 import Profile from './pages/Profile'
+import Favorites from './pages/Favorites'
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
       <Route path="/person/:id" element={<MainLayout><PersonDetail /></MainLayout>} />
       <Route path="/login" element={<AuthPage />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/favorites" element={<Favorites />} />
     </Routes>
   )
 }
