@@ -13,8 +13,16 @@ async function request(path, options = {}) {
   if (TOKEN) {
     init.headers = {
       ...init.headers,
-      Authorization: `Bearer ${TOKEN}`,
       'x-app-token': TOKEN,
+    }
+  }
+
+  // Additionally send user token from localStorage if logged in
+  const userToken = typeof localStorage !== 'undefined' ? localStorage.getItem('auth_token') : null
+  if (userToken) {
+    init.headers = {
+      ...init.headers,
+      Authorization: `Bearer ${userToken}`,
     }
   }
 
