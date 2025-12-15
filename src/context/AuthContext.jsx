@@ -36,7 +36,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('auth_user')
     setToken(null)
     setUser(null)
-    try { window.location.reload() } catch {}
+    try { window.location.reload() } catch {return null}
   }
 
   return (

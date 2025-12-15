@@ -97,7 +97,14 @@ function AuthArea() {
         {initials}
       </button>
       {showLogout && (
-        <div className="absolute right-0 mt-2 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50">
+        <div className="absolute right-0 mt-2 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 min-w-[160px]">
+          <Link
+            to="/profile"
+            className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+            onClick={() => setShowLogout(false)}
+          >
+            Profile
+          </Link>
           <button
             onClick={logout}
             className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
