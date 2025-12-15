@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import LoadingSkeleton from '../components/movie/LoadingSkeleton'
+import Pagination from '../components/ui/Pagination'
 import { getPerson } from '../services/api/endpoints/person'
 import { Briefcase, Calendar, Trophy, Ruler, Cake, BookOpen, Film } from 'lucide-react'
 
@@ -9,6 +10,8 @@ export default function PersonDetail() {
   const [person, setPerson] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [kfPage, setKfPage] = useState(1)
+  const kfLimit = 4
 
   useEffect(() => {
     let mounted = true
@@ -19,6 +22,7 @@ export default function PersonDetail() {
         const data = await getPerson(id)
         if (!mounted) return
         setPerson(data)
+        setKfPage(1)
       } catch (err) {
         if (!mounted) return
         setError(err.message || String(err))
@@ -98,7 +102,7 @@ export default function PersonDetail() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {person.known_for.map((m) => (
+            {person.known_for.slice((kfPage - 1) * kfLimit, kfPage * kfLimit).map((m) => (
               <Link to={`/movie/${m.id}`} key={m.id} className="group bg-[#111213] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
                 <div className="w-full h-52 text-white bg-gray-800 overflow-hidden">
                   {m.image ? (
@@ -115,6 +119,10 @@ export default function PersonDetail() {
                 </div>
               </Link>
             ))}
+          </div>
+
+          <div className="mt-6">
+            <Pagination page={kfPage} totalPages={Math.max(1, Math.ceil(person.known_for.length / kfLimit))} onChange={(p) => setKfPage(p)} />
           </div>
         </div>
       )}
