@@ -123,9 +123,9 @@ export async function getMovie(id) {
  * Get reviews for a movie (endpoint: /movies/{id}/reviews)
  * Returns an object: { data: [], total, current_page, total_pages, page_size }
  */
-export async function getMovieReviews(id, page = 1, limit = 10) {
+export async function getMovieReviews(id, page = 1, limit = 10, sort = 'newest') {
   if (!id) return { data: [], total: 0, current_page: 1, total_pages: 1, page_size: Number(limit) }
-  const qs = new URLSearchParams({ page: String(page), limit: String(limit) })
+  const qs = new URLSearchParams({ page: String(page), limit: String(limit), sort: String(sort) })
   const res = await request(`/movies/${id}/reviews?${qs.toString()}`, { method: 'GET' })
 
   const items = Array.isArray(res && res.results) ? res.results : Array.isArray(res && res.data) ? res.data : Array.isArray(res) ? res : []

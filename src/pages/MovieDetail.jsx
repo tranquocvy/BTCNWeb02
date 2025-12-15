@@ -37,6 +37,7 @@ export default function MovieDetail() {
   const [reviewsMeta, setReviewsMeta] = useState({ total: 0, current_page: 1, total_pages: 1, page_size: 10 })
   const [expandedReviews, setExpandedReviews] = useState(new Set())
   const [reviewsPage, setReviewsPage] = useState(1)
+  const [reviewSort, setReviewSort] = useState('newest')
   const [isFavorite, setIsFavorite] = useState(false)
   const [favoriteLoading, setFavoriteLoading] = useState(false)
 
@@ -117,7 +118,7 @@ export default function MovieDetail() {
       setReviewsLoading(true)
       try {
         const limit = reviewsMeta.page_size || 10
-        const res = await getMovieReviews(movie.id, reviewsPage, limit)
+        const res = await getMovieReviews(movie.id, reviewsPage, limit, reviewSort)
         if (!mounted) return
         setReviews(Array.isArray(res.data) ? res.data : [])
         setReviewsMeta({ total: res.total || 0, current_page: res.current_page || reviewsPage, total_pages: res.total_pages || 1, page_size: res.page_size || limit })
@@ -132,7 +133,7 @@ export default function MovieDetail() {
     }
     fetchReviews()
     return () => { mounted = false }
-  }, [movie && movie.id, reviewsPage])
+  }, [movie && movie.id, reviewsPage, reviewSort])
 
   if (loading) return <div className="max-w-[1200px] mx-auto px-4 py-8"><LoadingSkeleton variant="large" /></div>
   if (error) return <div className="max-w-[1200px] mx-auto px-4 py-8 text-red-400">Error: {error}</div>
@@ -275,7 +276,22 @@ export default function MovieDetail() {
 
       {/* Reviews */}
       <div className="w-full mt-8">
-        <h2 className="flex text-2xl font-bold text-black/80 dark:text-gray-200 mb-4">REVIEWS ({reviewsMeta.total})</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold text-black/80 dark:text-gray-200">REVIEWS ({reviewsMeta.total})</h2>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600 dark:text-gray-400">Sắp xếp:</label>
+            <select
+              value={reviewSort}
+              onChange={(e) => { setReviewSort(e.target.value); setReviewsPage(1) }}
+              className="px-3 py-1 bg-gray-800 text-white rounded-md"
+            >
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="highest">Highest</option>
+              <option value="lowest">Lowest</option>
+            </select>
+          </div>
+        </div>
         {reviewsLoading ? (
           <div className="text-gray-500">Đang tải reviews...</div>
         ) : reviews.length === 0 ? (
