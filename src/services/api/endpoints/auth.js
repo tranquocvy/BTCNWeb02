@@ -21,6 +21,14 @@ export async function loginUser(body) {
 }
 
 /**
+ * Logout user
+ * @returns {Promise<any>} response JSON
+ */
+export async function logoutUser() {
+  return await request('/users/logout', { method: 'POST' })
+}
+
+/**
  * Get current user profile
  * @returns {Promise<any>} user profile data
  */
@@ -66,4 +74,4 @@ export async function getFavorites() {
   return await request('/users/favorites', { method: 'GET' })
 }
 
-export default { registerUser, loginUser, getUserProfile, updateUserProfile, addFavorite, removeFavorite, getFavorites }
+export default { registerUser, loginUser, logoutUser, getUserProfile, updateUserProfile, addFavorite, removeFavorite, getFavorites }

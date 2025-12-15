@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState } from 'react'
-
-const AuthContext = createContext(null)
+import React, { useState } from 'react'
+import { AuthContext } from './AuthContextCore'
+import { logoutUser } from '../services/api/endpoints/auth'
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
@@ -26,12 +26,18 @@ export function AuthProvider({ children }) {
       setToken(tokenStr)
     }
     if (userObj) {
-      try { localStorage.setItem('auth_user', JSON.stringify(userObj)) } catch {}
+      try { localStorage.setItem('auth_user', JSON.stringify(userObj)) } catch {console.error();
+      }
       setUser(userObj)
     }
   }
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await logoutUser()
+    } catch {
+      console.error()
+    }
     localStorage.removeItem('auth_token')
     localStorage.removeItem('auth_user')
     setToken(null)
@@ -46,10 +52,5 @@ export function AuthProvider({ children }) {
   )
 }
 
-export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider')
-  return ctx
-}
-
-export default AuthContext
+export { useAuth } from './AuthContextCore'
+export default AuthProvider
