@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import LoadingSkeleton from '../components/movie/LoadingSkeleton'
 import { getPerson } from '../services/api/endpoints/person'
-import { Briefcase, Calendar, Trophy, Ruler, Cake, BookOpen } from 'lucide-react'
+import { Briefcase, Calendar, Trophy, Ruler, Cake, BookOpen, Film } from 'lucide-react'
 
 export default function PersonDetail() {
   const { id } = useParams()
@@ -88,6 +88,36 @@ export default function PersonDetail() {
           </div>
         </div>
       </div>
+
+      {/* Known For */}
+      {person.known_for && person.known_for.length > 0 && (
+        <div className="mt-10">
+          <div className="flex items-center gap-2 mb-4">
+            <Film className="w-6 h-6 text-yellow-400" />
+            <h2 className="text-2xl font-semibold text-white">Known For</h2>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {person.known_for.map((m) => (
+              <Link to={`/movie/${m.id}`} key={m.id} className="group bg-[#111213] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+                <div className="w-full h-52 bg-gray-800 overflow-hidden">
+                  {m.image ? (
+                    <img src={m.image} alt={m.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-400">No image</div>
+                  )}
+                </div>
+                <div className="p-3">
+                  <div className="text-white font-semibold text-sm truncate">{m.title}</div>
+                  <div className="text-gray-400 text-xs mt-1">{m.year || 'N/A'}</div>
+                  <div className="text-gray-300 text-xs mt-2">Role: <span className="font-medium">{m.role || 'N/A'}</span></div>
+                  {m.character && <div className="text-gray-400 text-xs mt-1 truncate">as {m.character}</div>}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
