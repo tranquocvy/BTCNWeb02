@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { updateProfileSchema } from '../lib/authSchema'
 import { useAuth } from '../context/AuthContext'
 import { getUserProfile, updateUserProfile } from '../services/api/endpoints/auth'
 import { User, Mail, Phone, Calendar, Shield, Edit2, Save, X } from 'lucide-react'
@@ -10,20 +13,30 @@ export default function Profile() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
-  const [formData, setFormData] = useState({ email: '', phone: '', dob: '' })
   const [saveMessage, setSaveMessage] = useState(null)
   const [saveError, setSaveError] = useState(null)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(updateProfileSchema),
+    defaultValues: { email: '', phone: '', dob: '' },
+  })
 
   useEffect(() => {
     async function fetchProfile() {
       try {
         const data = await getUserProfile()
         setProfile(data)
-        setFormData({
+        const formValues = {
           email: data.email || '',
           phone: data.phone || '',
           dob: data.dob ? data.dob.split('T')[0] : '',
-        })
+        }
+        reset(formValues)
       } catch (err) {
         setError(err.message || String(err))
       } finally {
@@ -31,13 +44,12 @@ export default function Profile() {
       }
     }
     fetchProfile()
-  }, [])
-
-  const handleSave = async () => {
+  }, [reset])
+const onSubmit = async (data) => {
     setSaveMessage(null)
     setSaveError(null)
     try {
-      const updated = await updateUserProfile(formData)
+      const updated = await updateUserProfile(data)
       setProfile(updated)
       if (contextUser) {
         login({ ...contextUser, ...updated }, localStorage.getItem('auth_token'))
@@ -51,7 +63,7 @@ export default function Profile() {
   }
 
   const handleCancel = () => {
-    setFormData({
+    reset({
       email: profile.email || '',
       phone: profile.phone || '',
       dob: profile.dob ? profile.dob.split('T')[0] : '',
@@ -134,8 +146,8 @@ export default function Profile() {
               ) : (
                 <>
                   <button
-                    onClick={handleSave}
-                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-2 transition"
+                    onClick={handleSubmit(onSubmit)}
+                    className="px-4 py-2 bg-gradient-to-r from-[#682480] to-[#3864CC] hover:opacity-90 text-white rounded-lg flex items-center gap-2 transition"
                   >
                     <Save size={18} />
                     Lưu
@@ -176,7 +188,7 @@ export default function Profile() {
                 <User size={16} />
                 Tên đăng nhập
               </label>
-              <div className="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+              <div className="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg h-[50px] flex items-center">
                 {profile.username || 'N/A'}
               </div>
             </div>
@@ -188,15 +200,19 @@ export default function Profile() {
                 Email
               </label>
               {isEditing ? (
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
+                <div>
+                  <input
+                    type="email"
+                    {...register('email')}
+                    className="w-full h-[50px] px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                  )}
+                </div>
               ) : (
-                <div className="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                  {formData.email || 'N/A'}
+                <div className="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg h-[50px] flex items-center">
+                  {profile.email || 'N/A'}
                 </div>
               )}
             </div>
@@ -208,35 +224,43 @@ export default function Profile() {
                 Số điện thoại
               </label>
               {isEditing ? (
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
+                <div>
+                  <input
+                    type="tel"
+                    {...register('phone')}
+                    className="w-full h-[50px] px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                  {errors.phone && (
+                    <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+                  )}
+                </div>
               ) : (
-                <div className="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                  {formData.phone || 'N/A'}
+                <div className="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg h-[50px] flex items-center">
+                  {profile.phone || 'N/A'}
                 </div>
               )}
             </div>
 
-            {/* Date of birth */}
+            {/* Date of Birth */}
             <div>
               <label className="block text-sm font-medium mb-2 flex items-center gap-2">
                 <Calendar size={16} />
                 Ngày sinh
               </label>
               {isEditing ? (
-                <input
-                  type="date"
-                  value={formData.dob}
-                  onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
+                <div>
+                  <input
+                    type="date"
+                    {...register('dob')}
+                    className="w-full h-[50px] px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                  {errors.dob && (
+                    <p className="text-red-500 text-sm mt-1">{errors.dob.message}</p>
+                  )}
+                </div>
               ) : (
-                <div className="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                  {formData.dob || 'N/A'}
+                <div className="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg h-[50px] flex items-center">
+                  {profile.dob ? profile.dob.split('T')[0] : 'N/A'}
                 </div>
               )}
             </div>
@@ -247,7 +271,7 @@ export default function Profile() {
                 <Shield size={16} />
                 Vai trò
               </label>
-              <div className="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg inline-block">
+              <div className="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg h-[50px] flex items-center">
                 <span className="capitalize">{profile.role || 'user'}</span>
               </div>
             </div>
