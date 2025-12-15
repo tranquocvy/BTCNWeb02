@@ -34,9 +34,17 @@ async function request(path, options = {}) {
 
   if (!res.ok) {
     const text = await res.text().catch(() => '')
-    const err = new Error(`HTTP ${res.status} ${res.statusText} when fetching ${url}`)
+    let parsed = null
+    try {
+      parsed = text ? JSON.parse(text) : null
+    } catch {
+      parsed = null
+    }
+    const serverMessage = parsed && (parsed.message || parsed.error || parsed.msg) ? (parsed.message || parsed.error || parsed.msg) : null
+    const errMessage = serverMessage || `HTTP ${res.status} ${res.statusText} when fetching ${url}`
+    const err = new Error(errMessage)
     err.status = res.status
-    err.body = text
+    err.body = parsed ?? text
     throw err
   }
 

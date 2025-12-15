@@ -1,21 +1,46 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from 'react-router-dom'
 import { registerSchema } from '../../lib/authSchema'
+import { registerUser } from '../../services/api/endpoints/auth'
 
 export default function Register({ onSubmit }) {
+  const navigate = useNavigate()
+  const [serverError, setServerError] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(registerSchema) })
 
-  const submitHandler = onSubmit ? handleSubmit(onSubmit) : handleSubmit((data) => {
-    console.log('Register data', data)
+  const submitHandler = handleSubmit(async (data) => {
+    setServerError(null)
+    try {
+      const res = await registerUser(data)
+      const message = res?.message || res?.msg || 'Đăng ký thành công'
+      setSuccessMessage(message)
+      if (res && (res.token || res.access_token || res.accessToken)) {
+        const token = res.token || res.access_token || res.accessToken
+        localStorage.setItem('auth_token', token)
+      }
+      if (onSubmit) onSubmit(data, res)
+      setTimeout(() => navigate('/login'), 2000)
+    } catch (err) {
+      setServerError(err.message || String(err))
+    }
   })
 
   return (
     <form onSubmit={submitHandler} className="text-left max-w-md mx-auto bg-transparent backdrop-blur-md border border-white/10 p-6 rounded-xl shadow-md transition">
+
+      {successMessage && (
+        <div role="status" aria-live="polite" className="mb-4 p-3 rounded-md bg-green-700 bg-opacity-90 text-white text-sm font-medium">
+          {successMessage}
+        </div>
+      )}
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-200 mb-1">Username</label>
@@ -97,6 +122,7 @@ export default function Register({ onSubmit }) {
         >
           {isSubmitting ? 'Submitting...' : 'Đăng ký'}
         </button>
+        {serverError && <p className="text-red-400 text-sm mt-2">{serverError}</p>}
       </div>
     </form>
   )
