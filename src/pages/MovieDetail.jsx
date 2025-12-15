@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { Tag, Clock, Calendar, Globe, Languages, NotebookPen, Trophy } from 'lucide-react'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { Tag, Clock, Calendar, Globe, Languages, NotebookPen, Trophy, Heart } from 'lucide-react'
 import LoadingSkeleton from '../components/movie/LoadingSkeleton'
 import { getMovie, getMovieReviews } from '../services/api/endpoints/movie'
+import { addFavorite, removeFavorite, getFavorites } from '../services/api/endpoints/auth'
+import { useAuth } from '../context/AuthContext'
 import Pagination from '../components/ui/Pagination'
 
 const scrollbarStyles = `
@@ -24,6 +26,8 @@ const scrollbarStyles = `
 
 export default function MovieDetail() {
   const { id } = useParams()
+  const navigate = useNavigate()
+  const { user } = useAuth()
   const [movie, setMovie] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -33,6 +37,8 @@ export default function MovieDetail() {
   const [reviewsMeta, setReviewsMeta] = useState({ total: 0, current_page: 1, total_pages: 1, page_size: 10 })
   const [expandedReviews, setExpandedReviews] = useState(new Set())
   const [reviewsPage, setReviewsPage] = useState(1)
+  const [isFavorite, setIsFavorite] = useState(false)
+  const [favoriteLoading, setFavoriteLoading] = useState(false)
 
   useEffect(() => {
     let mounted = true
@@ -58,6 +64,51 @@ export default function MovieDetail() {
       mounted = false
     }
   }, [id])
+
+  // Check if movie is in favorites
+  useEffect(() => {
+    if (!user || !movie) return
+    let mounted = true
+    async function checkFavorite() {
+      try {
+        const favorites = await getFavorites()
+        if (!mounted) return
+        // Check if current movie is in favorites list
+        const isFav = Array.isArray(favorites) && favorites.some(fav => fav.id === movie.id || fav.movie_id === movie.id)
+        setIsFavorite(isFav)
+      } catch (err) {
+        console.error('Error checking favorites:', err)
+      }
+    }
+    checkFavorite()
+    return () => { mounted = false }
+  }, [user, movie])
+
+  const handleFavoriteToggle = async () => {
+    // Check if user is logged in
+    if (!user) {
+      alert('Vui lòng đăng nhập để sử dụng tính năng này!')
+      navigate('/login')
+      return
+    }
+
+    if (!movie || !movie.id) return
+
+    setFavoriteLoading(true)
+    try {
+      if (isFavorite) {
+        await removeFavorite(movie.id)
+        setIsFavorite(false)
+      } else {
+        await addFavorite(movie.id)
+        setIsFavorite(true)
+      }
+    } catch (err) {
+      alert(err.message || 'Có lỗi xảy ra')
+    } finally {
+      setFavoriteLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (!movie || !movie.id) return
@@ -105,9 +156,24 @@ export default function MovieDetail() {
 
         {/* Info */}
         <div className="md:w-3/5 space-y-5">
-          {/* Title */}
+          {/* Title and Favorite Button */}
           {movie.full_title && (
-            <h1 className="text-5xl font-extrabold text-white uppercase tracking-wide">{movie.full_title}</h1>
+            <div className="flex items-start gap-4">
+              <h1 className="text-5xl font-extrabold text-white uppercase tracking-wide flex-1">{movie.full_title}</h1>
+              <button
+                onClick={handleFavoriteToggle}
+                disabled={favoriteLoading}
+                className={`flex-shrink-0 p-3 rounded-full transition-all ${
+                  favoriteLoading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'
+                } ${isFavorite ? 'bg-red-500/20' : 'bg-white/10'}`}
+                title={isFavorite ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'}
+              >
+                <Heart
+                  size={32}
+                  className={isFavorite ? 'fill-red-500 text-red-500' : 'text-white'}
+                />
+              </button>
+            </div>
           )}
 
           {/* Meta info */}
