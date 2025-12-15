@@ -42,7 +42,7 @@ export default function Login({ onSubmit }) {
   return (
     <form
       onSubmit={submitHandler}
-      className="text-left max-w-md mx-auto bg-trans backdrop-blur-md border border-white/10 p-6 rounded-xl shadow-md transition"
+      className="text-left max-w-md mx-auto bg-trans backdrop-blur-md border border-black/20 dark:border-white/20 p-6 rounded-xl shadow-md transition"
     >
       {successMessage && (
         <div role="status" aria-live="polite" className="mb-4 p-3 rounded-md bg-green-700 bg-opacity-90 text-white text-sm font-medium">
@@ -51,11 +51,11 @@ export default function Login({ onSubmit }) {
       )}
 
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-200 mb-1">Username</label>
+        <label className="block text-sm font-medium mb-1">Username</label>
         <input
           type="text"
           {...register('username')}
-          className="w-full px-3 py-2 rounded bg-trans border border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          className="w-full px-3 py-2 rounded bg-trans border border-black/20 dark:border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
         {errors.username && (
           <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
@@ -63,11 +63,11 @@ export default function Login({ onSubmit }) {
       </div>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-200 mb-1">Password</label>
+        <label className="block text-sm font-medium mb-1">Password</label>
         <input
           type="password"
           {...register('password')}
-          className="w-full px-3 py-2 rounded bg-transparent border border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
         {errors.password && (
           <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
