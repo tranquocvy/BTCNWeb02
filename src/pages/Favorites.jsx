@@ -5,6 +5,7 @@ import MainLayout from '../layouts/MainLayout'
 import { getFavorites, removeFavorite } from '../services/api/endpoints/auth'
 import { useAuth } from '../context/AuthContext'
 import LoadingSkeleton from '../components/movie/LoadingSkeleton'
+import Pagination from '../components/ui/Pagination'
 
 export default function Favorites() {
   const { user } = useAuth()
@@ -13,6 +14,8 @@ export default function Favorites() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [removingIds, setRemovingIds] = useState(new Set())
+  const [page, setPage] = useState(1)
+  const limit = 9
 
   useEffect(() => {
     if (!user) {
@@ -25,10 +28,11 @@ export default function Favorites() {
       setLoading(true)
       setError(null)
       try {
-        const data = await getFavorites()
-        if (!mounted) return
-        setFavorites(Array.isArray(data) ? data : [])
-      } catch (err) {
+          const data = await getFavorites()
+          if (!mounted) return
+          setFavorites(Array.isArray(data) ? data : [])
+          setPage(1)
+        } catch (err) {
         if (!mounted) return
         setError(err.message || String(err))
       } finally {
@@ -49,7 +53,13 @@ export default function Favorites() {
     setRemovingIds(prev => new Set(prev).add(movieId))
     try {
       await removeFavorite(movieId)
-      setFavorites(prev => prev.filter(movie => movie.id !== movieId))
+      setFavorites(prev => {
+        const next = prev.filter(movie => movie.id !== movieId)
+        // adjust current page if last item on page removed
+        const totalPages = Math.max(1, Math.ceil(next.length / limit))
+        if (page > totalPages) setPage(totalPages)
+        return next
+      })
     } catch (err) {
       alert(err.message || 'Có lỗi xảy ra')
     } finally {
@@ -120,16 +130,22 @@ export default function Favorites() {
           </div>
         ) : (
           /* Movies Grid */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {favorites.map((movie) => (
-              <FavoriteMovieCard
-                key={movie.id}
-                movie={movie}
-                onRemove={handleRemoveFavorite}
-                isRemoving={removingIds.has(movie.id)}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {favorites.slice((page - 1) * limit, page * limit).map((movie) => (
+                <FavoriteMovieCard
+                  key={movie.id}
+                  movie={movie}
+                  onRemove={handleRemoveFavorite}
+                  isRemoving={removingIds.has(movie.id)}
+                />
+              ))}
+            </div>
+
+            <div className="mt-8">
+              <Pagination page={page} totalPages={Math.max(1, Math.ceil(favorites.length / limit))} onChange={(p) => setPage(p)} />
+            </div>
+          </>
         )}
       </div>
     </MainLayout>
