@@ -38,4 +38,32 @@ export async function updateUserProfile(body) {
   return await request('/users/profile', { method: 'PATCH', body })
 }
 
-export default { registerUser, loginUser, getUserProfile, updateUserProfile }
+/**
+ * Mark a movie as favorite
+ * @param {string|number} movieId - The movie ID
+ * @returns {Promise<any>} response data
+ */
+export async function addFavorite(movieId) {
+  if (!movieId) throw new Error('addFavorite requires a movieId')
+  return await request(`/users/favorites/${movieId}`, { method: 'POST' })
+}
+
+/**
+ * Remove a movie from favorites
+ * @param {string|number} movieId - The movie ID
+ * @returns {Promise<any>} response data
+ */
+export async function removeFavorite(movieId) {
+  if (!movieId) throw new Error('removeFavorite requires a movieId')
+  return await request(`/users/favorites/${movieId}`, { method: 'DELETE' })
+}
+
+/**
+ * Get user's favorite movies
+ * @returns {Promise<any>} list of favorite movies
+ */
+export async function getFavorites() {
+  return await request('/users/favorites', { method: 'GET' })
+}
+
+export default { registerUser, loginUser, getUserProfile, updateUserProfile, addFavorite, removeFavorite, getFavorites }
