@@ -17,14 +17,14 @@ export default function Login({ onSubmit }) {
   return (
     <form
       onSubmit={submitHandler}
-      className="text-left max-w-md mx-auto bg-white/5 backdrop-blur-sm border border-gray-700 p-6 rounded-xl shadow-md transition"
+      className="text-left max-w-md mx-auto bg-trans backdrop-blur-md border border-white/10 p-6 rounded-xl shadow-md transition"
     >
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Email</label>
+        <label className="block text-sm font-medium text-gray-200 mb-1">Email</label>
         <input
           type="email"
           {...register('email')}
-          className="w-full px-3 py-2 rounded bg-transparent border border-gray-600 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          className="w-full px-3 py-2 rounded bg-trans border border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
         {errors.email && (
           <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -32,11 +32,11 @@ export default function Login({ onSubmit }) {
       </div>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Password</label>
+        <label className="block text-sm font-medium text-gray-200 mb-1">Password</label>
         <input
           type="password"
           {...register('password')}
-          className="w-full px-3 py-2 rounded bg-transparent border border-gray-600 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          className="w-full px-3 py-2 rounded bg-transparent border border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
         {errors.password && (
           <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
