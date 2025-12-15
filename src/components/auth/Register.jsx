@@ -51,7 +51,7 @@ export default function Register({ onSubmit }) {
         <input
           type="text"
           {...register('username')}
-          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
         {errors.username && (
           <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
@@ -63,7 +63,7 @@ export default function Register({ onSubmit }) {
         <input
           type="email"
           {...register('email')}
-          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
         {errors.email && (
           <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -75,7 +75,7 @@ export default function Register({ onSubmit }) {
         <input
           type="tel"
           {...register('phone')}
-          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
         {errors.phone && (
           <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
@@ -87,7 +87,7 @@ export default function Register({ onSubmit }) {
         <input
           type="date"
           {...register('dob')}
-          className="w-full px-3 py-2 rounded text-white/500 dark:text-white/500 bg-transparent border border-black/20 dark:border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          className="w-full px-3 py-2 rounded text-white/500 dark:text-white/500 bg-transparent border border-black/20 dark:border-white/10 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
         {errors.dob && (
           <p className="text-red-500 text-sm mt-1">{errors.dob.message}</p>
@@ -99,7 +99,7 @@ export default function Register({ onSubmit }) {
         <input
           type="password"
           {...register('password')}
-          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
         {errors.password && (
           <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
@@ -111,7 +111,7 @@ export default function Register({ onSubmit }) {
         <input
           type="password"
           {...register('confirmPassword')}
-          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
         {errors.confirmPassword && (
           <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>

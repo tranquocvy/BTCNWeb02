@@ -55,7 +55,7 @@ export default function Login({ onSubmit }) {
         <input
           type="text"
           {...register('username')}
-          className="w-full px-3 py-2 rounded bg-trans border border-black/20 dark:border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          className="w-full px-3 py-2 rounded bg-trans border border-black/20 dark:border-white/10 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
         {errors.username && (
           <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
@@ -67,7 +67,7 @@ export default function Login({ onSubmit }) {
         <input
           type="password"
           {...register('password')}
-          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          className="w-full px-3 py-2 rounded bg-transparent border border-black/20 dark:border-white/10 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />
         {errors.password && (
           <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
