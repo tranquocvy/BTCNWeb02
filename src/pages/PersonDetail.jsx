@@ -45,37 +45,37 @@ export default function PersonDetail() {
         </div>
 
         <div className="md:w-2/3">
-          <h1 className="text-4xl font-bold text-white mb-4">{person.name || person.full_name}</h1>
+          <h1 className="text-4xl font-bold text-black/80 dark:text-gray-200 mb-4">{person.name || person.full_name}</h1>
           
           <div className="space-y-2 mb-6 space-y-6">
             <div className="flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-yellow-400" />
-              <span className="text-base text-gray-200">{person.role || 'N/A'}</span>
+              <Briefcase className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+              <span className="text-base text-black/80 dark:text-gray-200">{person.role || 'N/A'}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Ruler className="w-5 h-5 text-yellow-400" />
-              <span className="text-base text-gray-200">{person.height || 'N/A'}</span>
+              <Ruler className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+              <span className="text-base text-black/80 dark:text-gray-200">{person.height || 'N/A'}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Cake className="w-5 h-5 text-yellow-400" />
-              <span className="text-base text-gray-200">Born: {person.birth_date ? new Date(person.birth_date).toLocaleDateString() : 'N/A'}</span>
+              <Cake className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+              <span className="text-base text-black/80 dark:text-gray-200">Born: {person.birth_date ? new Date(person.birth_date).toLocaleDateString() : 'N/A'}</span>
             </div>
             {person.death_date && (
               <div className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-gray-400" />
-                <span className="text-base text-gray-200">Died: {new Date(person.death_date).toLocaleDateString()}</span>
+                <span className="text-base text-black/80 dark:text-gray-200">Died: {new Date(person.death_date).toLocaleDateString()}</span>
               </div>
             )}
             <div className="flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-yellow-400" />
-              <span className="text-base text-yellow-400 font-semibold">{person.awards || 'N/A'}</span>
+              <Trophy className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+              <span className="text-base text-black/80 dark:text-gray-200">{person.awards || 'N/A'}</span>
             </div>
           </div>
 
           {/* Summary */}
-          <div className="mt-6 text-gray-300 leading-relaxed">
+          <div className="mt-6 text-black/80 dark:text-gray-200 leading-relaxed">
             <div className="flex items-center gap-2 mb-3">
-              <BookOpen className="w-6 h-6 text-yellow-400" />
+              <BookOpen className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
               <h2 className="text-2xl font-semibold">Summary</h2>
             </div>
             { person.summary ? (
@@ -83,7 +83,7 @@ export default function PersonDetail() {
                 <p key={i} className="text-base mb-3">{para}</p>
               ))
             ) : (
-              <p className="text-base mb-3 text-gray-400">N/A</p>
+              <p className="text-base mb-3 text-black/80 dark:text-gray-200">N/A</p>
             ) }
           </div>
         </div>
@@ -93,14 +93,14 @@ export default function PersonDetail() {
       {person.known_for && person.known_for.length > 0 && (
         <div className="mt-10">
           <div className="flex items-center gap-2 mb-4">
-            <Film className="w-6 h-6 text-yellow-400" />
-            <h2 className="text-2xl font-semibold text-white">Known For</h2>
+            <Film className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+            <h2 className="text-2xl font-semibold text-black/80 dark:text-gray-200">Known For</h2>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {person.known_for.map((m) => (
               <Link to={`/movie/${m.id}`} key={m.id} className="group bg-[#111213] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
-                <div className="w-full h-52 bg-gray-800 overflow-hidden">
+                <div className="w-full h-52 text-white bg-gray-800 overflow-hidden">
                   {m.image ? (
                     <img src={m.image} alt={m.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                   ) : (

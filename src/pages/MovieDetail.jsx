@@ -155,17 +155,17 @@ export default function MovieDetail() {
         </div>
 
         {/* Info */}
-        <div className="md:w-3/5 space-y-5">
+        <div className="md:w-3/5 space-y-5 text-white dark:text-gray-300">
           {/* Title and Favorite Button */}
           {movie.full_title && (
             <div className="flex items-start gap-4">
-              <h1 className="text-5xl font-extrabold text-white uppercase tracking-wide flex-1">{movie.full_title}</h1>
+              <h1 className="text-5xl font-extrabold text-black/80 dark:text-gray-200 uppercase tracking-wide flex-1">{movie.full_title}</h1>
               <button
                 onClick={handleFavoriteToggle}
                 disabled={favoriteLoading}
                 className={`flex-shrink-0 p-3 rounded-full transition-all ${
                   favoriteLoading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'
-                } ${isFavorite ? 'bg-red-500/20' : 'bg-white/10'}`}
+                } ${isFavorite ? 'bg-red-500/20' : ' dark:bg-white/10 bg-black/20'}`}
                 title={isFavorite ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'}
               >
                 <Heart
@@ -177,45 +177,45 @@ export default function MovieDetail() {
           )}
 
           {/* Meta info */}
-          <div className="space-y-3 text-gray-200">
+          <div className="space-y-3 text-black/80 dark:text-gray-200">
             {Array.isArray(movie.genres) && movie.genres.length > 0 && (
               <div className="flex items-center gap-3">
-                <Tag className="w-5 h-5 text-yellow-400" />
+                <Tag className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                 <span className="text-lg">{movie.genres.join(', ')}</span>
               </div>
             )}
 
             {movie.runtime && (
               <div className="flex items-center gap-3">
-                <Clock className="w-5 h-5 text-yellow-400" />
+                <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                 <span className="text-lg">{movie.runtime}</span>
               </div>
             )}
 
             {movie.year && (
               <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-yellow-400" />
+                <Calendar className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                 <span className="text-lg">{movie.year}</span>
               </div>
             )}
 
             {Array.isArray(movie.countries) && movie.countries.length > 0 && (
               <div className="flex items-center gap-3">
-                <Globe className="w-5 h-5 text-yellow-400" />
+                <Globe className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                 <span className="text-lg">{movie.countries.join(', ')}</span>
               </div>
             )}
 
             {Array.isArray(movie.languages) && movie.languages.length > 0 && (
               <div className="flex items-center gap-3">
-                <Languages className="w-5 h-5 text-yellow-400" />
+                <Languages className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                 <span className="text-lg">{movie.languages.join(', ')}</span>
               </div>
             )}
 
             {Array.isArray(movie.directors) && movie.directors.length > 0 && (
               <div className="flex items-center gap-3">
-                <NotebookPen  className="w-5 h-5 text-yellow-400" />
+                <NotebookPen  className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                 <div className="text-lg flex flex-wrap gap-1">
                   {movie.directors.map((d, i) => (
                     <span key={d.id || d.name}>
@@ -232,8 +232,8 @@ export default function MovieDetail() {
           {movie.awards && (
             <div>
               <div className="flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-yellow-400" />
-                <p className="text-left text-base text-yellow-400 font-semibold">{movie.awards}</p>
+                <Trophy className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+                <p className="text-left text-base text-yellow-600 dark:text-yellow-400 font-semibold">{movie.awards}</p>
               </div>
             </div>
           )}
@@ -241,7 +241,7 @@ export default function MovieDetail() {
           {/* Cast Images - Horizontal Scroll */}
           {Array.isArray(movie.actors) && movie.actors.length > 0 && movie.actors.some(a => a.image) && (
             <div>
-              <h3 className="text-left text-2xl font-bold text-white mb-3 uppercase">DIỄN VIÊN</h3>
+              <h3 className="text-left text-2xl font-bold text-black/80 dark:text-gray-200 mb-3 uppercase">DIỄN VIÊN</h3>
               <div className="flex gap-4 overflow-x-auto pb-3 custom-scrollbar">
                 {movie.actors.filter(a => a.image).map((a) => (
                   <Link key={a.id || a.name} to={`/person/${a.id || a.name}`} className="flex flex-col items-start gap-2 bg-gray-800 p-3 rounded min-w-[120px] hover:brightness-110">
@@ -258,14 +258,14 @@ export default function MovieDetail() {
       {/* Plot */}
       {movie.plot_full && (
         <div className="text-left w-full mt-8">
-          <h3 className="text-2xl font-bold text-white mb-3">NỘI DUNG PHIM</h3>
+          <h3 className="text-2xl font-bold text-black/80 dark:text-gray-200 mb-3">NỘI DUNG PHIM</h3>
           <div
-            className={`text-left text-base text-gray-300 leading-relaxed transition-all ${plotExpanded ? '' : 'max-h-36 overflow-hidden'}`}
+            className={`text-left text-base text-black/80 dark:text-gray-300 leading-relaxed transition-all ${plotExpanded ? '' : 'max-h-36 overflow-hidden'}`}
             dangerouslySetInnerHTML={{ __html: movie.plot_full }}
           />
           <button
             onClick={() => setPlotExpanded(p => !p)}
-            className="mt-2 text-sm text-yellow-400 font-semibold cursor-pointer hover:underline"
+            className="mt-2 text-sm text-yellow-600 dark:text-yellow-400 font-semibold cursor-pointer hover:underline"
             aria-expanded={plotExpanded}
           >
             {plotExpanded ? 'Thu gọn' : 'Xem thêm'}
@@ -275,11 +275,11 @@ export default function MovieDetail() {
 
       {/* Reviews */}
       <div className="w-full mt-8">
-        <h2 className="flex text-2xl font-bold text-white mb-4">REVIEWS ({reviewsMeta.total})</h2>
+        <h2 className="flex text-2xl font-bold text-black/80 dark:text-gray-200 mb-4">REVIEWS ({reviewsMeta.total})</h2>
         {reviewsLoading ? (
-          <div className="text-gray-400">Đang tải reviews...</div>
+          <div className="text-gray-500">Đang tải reviews...</div>
         ) : reviews.length === 0 ? (
-          <div className="text-gray-400">Chưa có review cho phim này.</div>
+          <div className="text-gray-500">Chưa có review cho phim này.</div>
         ) : (
           <div className="flex text-left flex-col gap-4">
             {reviews.map((r, idx) => {
@@ -314,10 +314,13 @@ export default function MovieDetail() {
                           <span>{r.date ? new Date(r.date).toLocaleDateString() : ''}</span>
                         </div>
                       </div>
-                      <div className="mt-2 text-gray-300 text-sm" style={expanded ? {} : { display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      <div
+                        className={`mt-2 text-gray-300 text-sm transition-all ${expanded ? '' : 'filter blur-sm'}`}
+                        style={expanded ? {} : { display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                      >
                         {r.content}
                       </div>
-                      <div className="mt-2 text-xs text-yellow-400 font-semibold">{expanded ? 'Thu gọn' : 'Xem thêm'}</div>
+                      <div className="mt-2 text-xs text-yellow-600 dark:text-yellow-400 font-semibold">{expanded ? 'Thu gọn' : 'Bấm để đọc'}</div>
                     </div>
                   </div>
                 </div>

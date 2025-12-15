@@ -46,7 +46,7 @@ export default function Pagination({ page = 1, totalPages = 0, onChange }) {
             <button
               key={p}
               onClick={() => onChange(p)}
-              className={`px-3 py-1 rounded-md ${p === page ? 'bg-blue-600 text-white' : 'bg-gray-800 text-white'} cursor-pointer`}
+              className={`px-3 py-1 rounded-md ${p === page ? 'bg-yellow-400 text-black' : 'bg-gray-800 text-white'} cursor-pointer`}
             >
               {p}
             </button>
