@@ -75,8 +75,8 @@ export default function Favorites() {
     return (
       <MainLayout>
         <div className="max-w-[1200px] mx-auto px-4 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {[...Array(10)].map((_, i) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3 gap-6">
+            {[...Array(9)].map((_, i) => (
               <LoadingSkeleton key={i} variant="compact" />
             ))}
           </div>

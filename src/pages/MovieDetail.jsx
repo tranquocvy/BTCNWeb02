@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { Tag, Clock, Calendar, Globe, Languages, NotebookPen, Trophy, Heart } from 'lucide-react'
+import { Tag, Clock, Calendar, Globe, Languages, NotebookPen, Trophy, Heart, Star } from 'lucide-react'
 import LoadingSkeleton from '../components/movie/LoadingSkeleton'
 import { getMovie, getMovieReviews } from '../services/api/endpoints/movie'
 import { addFavorite, removeFavorite, getFavorites } from '../services/api/endpoints/auth'
@@ -324,15 +324,20 @@ export default function MovieDetail() {
                           <div className="text-sm font-semibold text-gray-200">{r.username || 'Người dùng'}</div>
                           {r.title && <div className="text-sm text-white font-semibold mt-1">{r.title}</div>}
                         </div>
-                        <div className="text-sm text-gray-400 flex items-center gap-2">
-                          {r.rate ? <span>Rating: {r.rate}</span> : null}
+                        <div className="text-sm text-gray-400 flex items-center gap-3">
+                          {r.rate ? (
+                            <div className="flex items-center text-yellow-400 font-semibold">
+                              <Star className="mr-1" size={16} />
+                              <span className="text-sm">{r.rate}/10</span>
+                            </div>
+                          ) : null}
                           {r.warning_spoilers ? <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded">Spoiler</span> : null}
                           <span>{r.date ? new Date(r.date).toLocaleDateString() : ''}</span>
                         </div>
                       </div>
                       <div
-                        className={`mt-2 text-gray-300 text-sm transition-all ${expanded ? '' : 'filter blur-sm'}`}
-                        style={expanded ? {} : { display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                        className={`mt-2 text-gray-300 text-sm transition-all ${(!expanded && r.warning_spoilers) ? 'filter blur-sm' : ''}`}
+                        style={!expanded ? { display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' } : {}}
                       >
                         {r.content}
                       </div>
