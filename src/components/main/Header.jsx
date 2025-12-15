@@ -77,7 +77,7 @@ function AuthArea() {
 
   if (!user) {
     return (
-      <Link to="/login" className="flex items-center gap-2 text-white hover:underline">
+      <Link to="/auth" className="flex items-center gap-2 text-white hover:underline">
         <CircleUser size={28} />
         <span className="text-sm">Login</span>
       </Link>

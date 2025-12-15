@@ -31,7 +31,7 @@ export default function Register({ onSubmit }) {
       // update global auth state if available
       auth.login(user, token)
       if (onSubmit) onSubmit(data, res)
-      setTimeout(() => navigate('/login'), 2000)
+      setTimeout(() => navigate('/auth'), 2000)
     } catch (err) {
       setServerError(err.message || String(err))
     }

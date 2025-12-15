@@ -89,7 +89,7 @@ export default function MovieDetail() {
     // Check if user is logged in
     if (!user) {
       alert('Vui lòng đăng nhập để sử dụng tính năng này!')
-      navigate('/login')
+      navigate('/auth')
       return
     }
 
@@ -133,7 +133,7 @@ export default function MovieDetail() {
     }
     fetchReviews()
     return () => { mounted = false }
-  }, [movie && movie.id, reviewsPage, reviewSort])
+  }, [movie?.id, reviewsPage, reviewSort])
 
   if (loading) return <div className="max-w-[1200px] mx-auto px-4 py-8"><LoadingSkeleton variant="large" /></div>
   if (error) return <div className="max-w-[1200px] mx-auto px-4 py-8 text-red-400">Error: {error}</div>

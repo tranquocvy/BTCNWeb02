@@ -20,7 +20,7 @@ export default function MainLayout({ children }) {
   const location = useLocation()
 
   useEffect(() => {
-    if (location.pathname !== '/') return
+    if (location.pathname !== '/' && location.pathname !== '/home') return
 
     let mounted = true
     async function loadMovies() {

@@ -60,8 +60,7 @@ export default function Search() {
         if (!mounted) return
         setError(err.message || String(err))
       } finally {
-        if (!mounted)
-        {setLoading(false)}
+        if (mounted) setLoading(false)
       }
     }
 
@@ -76,7 +75,7 @@ export default function Search() {
     const params = Object.fromEntries([...searchParams])
     if (p <= 1) delete params.page
     else params.page = String(p)
-    setSearchParams(params)
+    setSearchParams(params, { preventScrollReset: true })
   }
 
   const totalPages = (totalPagesState && typeof totalPagesState === 'number')

@@ -40,7 +40,7 @@ export default function NavBar() {
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-12">
           <div className="flex items-center gap-4">
-            <Link to="/" aria-label="Home" className="inline-flex items-center text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white cursor-pointer">
+            <Link to="/home" aria-label="Home" className="inline-flex items-center text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white cursor-pointer">
               <Home size={20} className="text-gray-700 dark:text-gray-200 cursor-pointer" />
             </Link>
           </div>

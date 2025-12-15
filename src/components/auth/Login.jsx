@@ -33,7 +33,7 @@ export default function Login({ onSubmit }) {
       setSuccessMessage(message)
       if (onSubmit) return onSubmit(data, res)
       // Navigate after short delay so user sees success message
-      setTimeout(() => navigate('/'), 1200)
+      setTimeout(() => navigate('/home'), 1200)
     } catch (err) {
       setServerError(err.message || String(err))
     }

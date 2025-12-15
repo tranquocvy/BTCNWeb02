@@ -19,7 +19,7 @@ export default function Favorites() {
 
   useEffect(() => {
     if (!user) {
-      navigate('/login')
+      navigate('/auth')
       return
     }
 
@@ -122,7 +122,7 @@ export default function Favorites() {
               Khám phá và thêm những bộ phim bạn yêu thích vào danh sách này!
             </p>
             <Link
-              to="/"
+              to="/home"
               className="inline-block px-6 py-3 bg-gradient-to-r from-[#682480] to-[#3864CC] text-white rounded-lg hover:opacity-90 transition"
             >
               Khám phá phim

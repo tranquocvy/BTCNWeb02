@@ -38,6 +38,7 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
       {showControls && (
         <div className="flex items-center justify-center gap-3">
           <button
+            type="button"
             aria-label="First page"
             onClick={() => onChange(1)}
             disabled={page <= 1}
@@ -47,6 +48,7 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
           </button>
 
           <button
+            type="button"
             onClick={() => onChange(Math.max(1, page - 1))}
             disabled={page <= 1}
             aria-label="Previous page"
@@ -66,6 +68,7 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
               const p = item
               return (
                 <button
+                  type="button"
                   key={p}
                   onClick={() => onChange(p)}
                   className={`px-3 py-1 rounded-md ${p === page ? 'bg-yellow-400 text-black' : 'bg-gray-800 text-white'} cursor-pointer`}
@@ -77,6 +80,7 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
           </div>
 
           <button
+            type="button"
             onClick={() => onChange(page + 1)}
             disabled={page >= totalPages}
             aria-label="Next page"
@@ -85,6 +89,7 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
             {'>'}
           </button>
           <button
+            type="button"
             aria-label="Last page"
             onClick={() => onChange(totalPages)}
             disabled={page >= totalPages}
