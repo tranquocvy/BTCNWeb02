@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Settings, CircleUser } from 'lucide-react'
+import { Settings, CircleUser, Sun, Moon, User, Heart, LogOut } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 
 export default function Header() {
@@ -54,6 +54,11 @@ export default function Header() {
                   style={{ transform: isDark ? 'translateX(24px)' : 'translateX(0)', transition: 'transform 150ms ease' }}
                 />
               </button>
+              {isDark ? (
+                <Moon className="text-white ml-2" size={16} />
+              ) : (
+                <Sun className="text-white ml-2" size={16} />
+              )}
 
               {/* Auth area */}
               <AuthArea />
@@ -74,7 +79,7 @@ function AuthArea() {
     return (
       <Link to="/login" className="flex items-center gap-2 text-white hover:underline">
         <CircleUser size={28} />
-        <span className="text-sm">Đăng nhập</span>
+        <span className="text-sm">Login</span>
       </Link>
     )
   }
@@ -103,20 +108,29 @@ function AuthArea() {
             className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             onClick={() => setShowLogout(false)}
           >
-            Profile
+            <div className="flex items-center">
+              <User className="mr-2" size={16} />
+              <span>Profile</span>
+            </div>
           </Link>
           <Link
             to="/favorites"
             className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             onClick={() => setShowLogout(false)}
           >
-            Favorites
+            <div className="flex items-center">
+              <Heart className="mr-2" size={16} />
+              <span>Favorites</span>
+            </div>
           </Link>
           <button
-            onClick={logout}
-            className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+            onClick={() => { setShowLogout(false); logout() }}
+            className="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
-            Logout
+            <div className="flex items-center">
+              <LogOut className="mr-2" size={16} />
+              <span>Logout</span>
+            </div>
           </button>
         </div>
       )}
