@@ -11,6 +11,7 @@ export default function AuthPage() {
   }
   const handleRegister = (data) => {
     console.log('Registering', data)
+    setTab('login')
   }
 
   return (

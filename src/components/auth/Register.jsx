@@ -24,14 +24,9 @@ export default function Register({ onSubmit }) {
       const res = await registerUser(data)
       const message = res?.message || res?.msg || 'Đăng ký thành công'
       setSuccessMessage(message)
-      const token = res?.token || res?.access_token || res?.accessToken
-      const user = res?.user || res?.data?.user || null
-      if (token) localStorage.setItem('auth_token', token)
-      if (user) localStorage.setItem('auth_user', JSON.stringify(user))
-      // update global auth state if available
-      auth.login(user, token)
-      if (onSubmit) onSubmit(data, res)
-      setTimeout(() => navigate('/auth'), 2000)
+      if (onSubmit) {
+        setTimeout(() => onSubmit(data, res), 1500)
+      }
     } catch (err) {
       setServerError(err.message || String(err))
     }

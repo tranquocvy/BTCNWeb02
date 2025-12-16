@@ -31,7 +31,7 @@ export default function Login({ onSubmit }) {
       // update global auth state
       auth.login(user, token)
       setSuccessMessage(message)
-      if (onSubmit) return onSubmit(data, res)
+      if (onSubmit) onSubmit(data, res)
       // Navigate after short delay so user sees success message
       setTimeout(() => navigate('/home'), 1200)
     } catch (err) {
