@@ -4,6 +4,11 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
   const showControls = totalPages && totalPages > 1
   const showSummary = typeof totalItems === 'number' && typeof pageSize === 'number'
 
+  const handlePageChange = (newPage) => {
+    if (newPage === page || newPage < 1 || newPage > totalPages) return
+    onChange(newPage)
+  }
+
   if (!showControls && !showSummary) return null
 
   function renderPageList() {
@@ -40,7 +45,7 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
           <button
             type="button"
             aria-label="First page"
-            onClick={() => onChange(1)}
+            onClick={() => handlePageChange(1)}
             disabled={page <= 1}
             className="px-2 py-1 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
@@ -49,7 +54,7 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
 
           <button
             type="button"
-            onClick={() => onChange(Math.max(1, page - 1))}
+            onClick={() => handlePageChange(page - 1)}
             disabled={page <= 1}
             aria-label="Previous page"
             className="px-3 py-1 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
@@ -61,7 +66,7 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
             {pages.map((item, idx) => {
               if (item === 'left-ellipsis' || item === 'right-ellipsis') {
                 return (
-                  <span key={item + idx} className="px-2 text-gray-400">…</span>
+                  <span key={`ellipsis-${idx}`} className="px-2 text-gray-400">…</span>
                 )
               }
 
@@ -69,8 +74,8 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
               return (
                 <button
                   type="button"
-                  key={p}
-                  onClick={() => onChange(p)}
+                  key={`page-${p}`}
+                  onClick={() => handlePageChange(p)}
                   className={`px-3 py-1 rounded-md ${p === page ? 'bg-yellow-400 text-black' : 'bg-gray-800 text-white'} cursor-pointer`}
                 >
                   {p}
@@ -81,7 +86,7 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
 
           <button
             type="button"
-            onClick={() => onChange(page + 1)}
+            onClick={() => handlePageChange(page + 1)}
             disabled={page >= totalPages}
             aria-label="Next page"
             className="px-3 py-1 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
@@ -91,7 +96,7 @@ export default function Pagination({ page = 1, totalPages = 0, onChange, totalIt
           <button
             type="button"
             aria-label="Last page"
-            onClick={() => onChange(totalPages)}
+            onClick={() => handlePageChange(totalPages)}
             disabled={page >= totalPages}
             className="px-2 py-1 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >

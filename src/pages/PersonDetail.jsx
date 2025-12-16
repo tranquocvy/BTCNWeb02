@@ -102,8 +102,8 @@ export default function PersonDetail() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {person.known_for.slice((kfPage - 1) * kfLimit, kfPage * kfLimit).map((m) => (
-              <Link to={`/movie/${m.id}`} key={m.id} className="group bg-[#111213] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+            {person.known_for.slice((kfPage - 1) * kfLimit, kfPage * kfLimit).map((m, idx) => (
+              <Link to={`/movie/${m.id}`} key={`${m.id}-${kfPage}-${idx}`} className="group bg-[#111213] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
                 <div className="w-full h-52 text-white bg-gray-800 overflow-hidden">
                   {m.image ? (
                     <img src={m.image} alt={m.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
